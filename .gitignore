@@ -1,0 +1,5 @@
+# Ignora carpeta con enunciado
+Enunciado
+
+# Ignora archivos ejecutables
+*.exe
