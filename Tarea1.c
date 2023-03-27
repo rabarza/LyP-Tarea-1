@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "structs.h"
 
@@ -35,7 +36,8 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas) {
     char linea[MAX_LEN];
 
     int n = 0;
-
+    // Nota: fgets agrega un salto de linea \n al final de lo leído
+    
     fgets(linea, MAX_LEN, fp); // Leer la primera línea, que tiene los nombres de las columnas
 
     while (fgets(linea, MAX_LEN, fp)) { // Leer el resto de las líneas
@@ -60,7 +62,7 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas) {
         char *ubicacion_sede_str;
 
         // Eliminar el carácter de nueva línea al final del búfer que agrega fgets al leer una linea
-        linea[strcspn(linea, "\n")] = 0;
+        linea[strcspn(linea, "\n")] = '\0';
 
         // Dividir la línea en campos
         char *start = linea; //puntero que apunta al 1er indice de la linea
@@ -136,6 +138,29 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas) {
 }
 
 
+bool validar_rut(persona *personas, int num_personas){
+    /* 
+    * Funcion que valida el RUT como llave única de una estructura de tipo persona.
+    Devuelve 1, si la llave es única y 0 sino.
+    * Parametros: 
+     - *personas: puntero a la direccion de memoria del primer elemento del arreglo de estructuras de tipo `persona`.
+     - RUT: llave única a ser validada
+     - num_personas: variable entera que indica el numero de personas en el arreglo *personas.
+    */
+    char *rut;
+    rut = "21151054-4"; // A MODO DE EJEMPLO. LO CORRECTO ES INGRESAR EL VALOR COMO PARÁMETRO
+
+    printf("Validando el RUT: %s...\n", rut);
+
+    for (int i = 0; i < num_personas; i++){
+        if (strcmp(personas[i].rut, rut) == 0){ // 0 cuando se encuentra (la llave no es única)
+            printf("El RUT %s ya se encuentra registrado", rut);
+            return false;
+        }
+    }
+    return true;
+}
+
 void agregar_persona(persona *personas, int *num_personas){
     /* 
     * Funcion agrega personas al arreglo de estructuras de tipo persona.
@@ -162,28 +187,34 @@ void agregar_persona(persona *personas, int *num_personas){
             .cod_sede = "MLC",
             .ubicacion_sede = "Malloco",
     };
+    // validar si se puede agregar al arreglo de estructuras
+    int validador; 
+    validador = validar_rut(temp, *num_personas);
 
-    char *apellido_1, *apellido_2;
+    if(validador){
+        char *apellido_1, *apellido_2;
 
-    for (i = 0; i < *num_personas; i++){
-        apellido_1 = strrchr(nueva_persona.nombre_completo, ' ') + 1; // Obtener posicion 1era letra del apellido de la persona j. Retorna un puntero al primer carácter encontrado en la cadena o un puntero nulo si el carácter no se encuentra.
-        apellido_2 = strrchr(temp[i].nombre_completo, ' ') + 1; // Obtener puntero a la 1era letra del apellido de la persona j+1
+        for (i = 0; i < *num_personas; i++){
+            apellido_1 = strrchr(nueva_persona.nombre_completo, ' ') + 1; // Obtener posicion 1era letra del apellido de la persona j.  Retorna un puntero al primer carácter encontrado en la cadena o un puntero nulo si el carácter no se encuentra.
+            apellido_2 = strrchr(temp[i].nombre_completo, ' ') + 1; // Obtener puntero a la 1era letra del apellido de la persona j+1
 
-        // Búsqueda de la posicion donde agregar a la persona
-        if(strcmp(apellido_1, apellido_2) < 0){
-            break; // el for se rompe cuando encuentro la posicion y obtengo el i
+            // Búsqueda de la posicion donde agregar a la persona
+            if(strcmp(apellido_1, apellido_2) < 0){
+                break; // el for se rompe cuando encuentro la posicion y obtengo el i
+            }
         }
-    }
-    // Mover a las personas que deben ir a la derecha de la persona i
-    for (int j = *num_personas; j > i; j--){
-        temp[j] = temp[j-1];
-    }
+        // Mover a las personas que deben ir a la derecha de la persona i
+        for (int j = *num_personas; j > i; j--){
+            temp[j] = temp[j-1];
+        }
 
-    personas = temp;
+        personas = temp;
+
+        personas[i] = nueva_persona; // insertar la nueva persona en el arreglo en la posicion i
+        *num_personas += 1;
+
+    }
     
-    personas[i] = nueva_persona; // insertar la nueva persona en el arreglo en la posicion i
-    *num_personas += 1;
-
 }
 
 void bubble_sort_por_apellido(persona *personas, int num_personas) {
@@ -247,6 +278,8 @@ int main() {
     buscar_persona(personas, num_personas); // buscar una persona por rut
     agregar_persona(personas, &num_personas); //agregar persona, notar que modifica num_personas
     imprimir_personas(personas, num_personas); // mostrar todas los personas
+    agregar_persona(personas, &num_personas); //agregar persona, notar que modifica num_personas
+
 
     return 0;
 }
