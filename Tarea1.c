@@ -37,7 +37,7 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas) {
 
     int n = 0;
     // Nota: fgets agrega un salto de linea \n al final de lo leído
-    
+
     fgets(linea, MAX_LEN, fp); // Leer la primera línea, que tiene los nombres de las columnas
 
     while (fgets(linea, MAX_LEN, fp)) { // Leer el resto de las líneas
@@ -138,7 +138,7 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas) {
 }
 
 
-bool validar_rut(persona *personas, int num_personas){
+bool validar_rut(persona *personas, int num_personas, char* rut){
     /* 
     * Funcion que valida el RUT como llave única de una estructura de tipo persona.
     Devuelve 1, si la llave es única y 0 sino.
@@ -147,10 +147,8 @@ bool validar_rut(persona *personas, int num_personas){
      - RUT: llave única a ser validada
      - num_personas: variable entera que indica el numero de personas en el arreglo *personas.
     */
-    char *rut;
-    rut = "21151054-4"; // A MODO DE EJEMPLO. LO CORRECTO ES INGRESAR EL VALOR COMO PARÁMETRO
 
-    printf("Validando el RUT: %s...\n", rut);
+   // validando el rut
 
     for (int i = 0; i < num_personas; i++){
         if (strcmp(personas[i].rut, rut) == 0){ // 0 cuando se encuentra (la llave no es única)
@@ -159,6 +157,66 @@ bool validar_rut(persona *personas, int num_personas){
         }
     }
     return true;
+}
+
+persona escanear_datos(){
+    //Lectura de datos
+    persona nueva_persona;
+
+    char linea[MAX_LEN];
+    printf("Ingrese los siguientes datos solicitados por consola\n\n");
+    
+    printf("RUT (sin puntos ni guión): ");
+    fgets(linea, MAX_LEN, stdin);
+    linea[strcspn(linea, "\n")] = '\0';
+    nueva_persona.rut = strdup(linea);
+
+    printf("\nNombre completo (Nombre Apellido):");
+    fgets(linea, MAX_LEN, stdin);
+    linea[strcspn(linea, "\n")] = '\0';
+    nueva_persona.nombre_completo = strdup(linea);
+
+    printf("Edad (años): ");
+    fgets(linea, MAX_LEN, stdin);
+    linea[strcspn(linea, "\n")] = '\0';
+    nueva_persona.edad = atoi(linea);
+
+
+    printf("Codigo del plan:");
+    fgets(linea, MAX_LEN, stdin);
+    linea[strcspn(linea, "\n")] = '\0';
+    nueva_persona.cod_plan = strdup(linea);
+    
+    printf("Descripcion del plan: ");
+    fgets(linea, MAX_LEN, stdin);
+    linea[strcspn(linea, "\n")] = '\0';
+    nueva_persona.descripcion_plan = strdup(linea);
+
+    
+    printf("Fecha de inicio (AAAA/MM/DD): ");
+    fgets(linea, MAX_LEN, stdin);
+    linea[strcspn(linea, "\n")] = '\0';
+    nueva_persona.desde = strdup(linea);
+
+    
+    printf("Fecha de termino (AAAA/MM/DD): ");
+    fgets(linea, MAX_LEN, stdin);
+    linea[strcspn(linea, "\n")] = '\0';
+    nueva_persona.hasta = strdup(linea);
+    
+    printf("Codigo de sede: ");
+    fgets(linea, MAX_LEN, stdin);
+    linea[strcspn(linea, "\n")] = '\0';
+    nueva_persona.cod_sede = strdup(linea);
+
+    
+    printf("Ubicacion de sede: ");
+    fgets(linea, MAX_LEN, stdin);
+    linea[strcspn(linea, "\n")] = '\0';
+    nueva_persona.ubicacion_sede = strdup(linea);
+
+    // crear estructura con datos ingresados    
+   return nueva_persona;
 }
 
 void agregar_persona(persona *personas, int *num_personas){
@@ -175,21 +233,33 @@ void agregar_persona(persona *personas, int *num_personas){
     // Reasigno espacio memoria para agregar una nueva persona
     persona *temp = realloc(personas, (*num_personas + 1) * sizeof(persona));
 
+    //Lectura de datos
+    char *rut_str;
+    char *nombre_str;
+    char *edad_str;
+    char *cod_plan_str;
+    char *descripcion_plan_str;
+    char *desde_str;
+    char *hasta_str;
+    char *cod_sede_str;
+    char *ubicacion_sede_str;
     // Se supone que estos datos hay que leerlos, pero ahora los pongo para probar la funcion
-    persona nueva_persona = {
-            .rut = "21151054-4",
-            .nombre_completo = "Rolando Zzzzzz",
-            .edad = atoi("23"),
-            .cod_plan = "PLNPRM",
-            .descripcion_plan = "Plan Premium",
-            .desde = "Desde Siempre",
-            .hasta = "Hasta Siempre",
-            .cod_sede = "MLC",
-            .ubicacion_sede = "Malloco",
-    };
+    // persona nueva_persona = {
+    //         .rut = "21151054-4",
+    //         .nombre_completo = "Rolando Zzzzzz",
+    //         .edad = atoi("23"),
+    //         .cod_plan = "PLNPRM",
+    //         .descripcion_plan = "Plan Premium",
+    //         .desde = "Desde Siempre",
+    //         .hasta = "Hasta Siempre",
+    //         .cod_sede = "MLC",
+    //         .ubicacion_sede = "Malloco",
+    // };
+
+    persona nueva_persona = escanear_datos();
     // validar si se puede agregar al arreglo de estructuras
     int validador; 
-    validador = validar_rut(temp, *num_personas);
+    validador = validar_rut(temp, *num_personas, nueva_persona.rut);
 
     if(validador){
         char *apellido_1, *apellido_2;
@@ -275,10 +345,10 @@ int main() {
     persona *personas = leer_archivo("BigMuscle.csv", &num_personas);
     bubble_sort_por_apellido(personas, num_personas); // ordenar por apellido
     // imprimir_personas(personas, num_personas); // mostrar todas los personas
-    buscar_persona(personas, num_personas); // buscar una persona por rut
+    // buscar_persona(personas, num_personas); // buscar una persona por rut
     agregar_persona(personas, &num_personas); //agregar persona, notar que modifica num_personas
+    // imprimir_personas(personas, num_personas); // mostrar todas los personas
     imprimir_personas(personas, num_personas); // mostrar todas los personas
-    agregar_persona(personas, &num_personas); //agregar persona, notar que modifica num_personas
 
 
     return 0;
