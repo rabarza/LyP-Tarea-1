@@ -8,23 +8,6 @@
 #define MAX_LEN 200
 
 
-void imprimir_personas(persona *personas, int num_personas) {
-    if (personas != NULL) {
-        for (int i = 0; i < num_personas; i++) {
-            printf("RUT: %s\n", personas[i].rut);
-            printf("Nombre completo: %s\n", personas[i].nombre_completo);
-            printf("Edad: %d\n", personas[i].edad);
-            printf("Codigo de plan: %s\n", personas[i].cod_plan);
-            printf("Descripcion de plan: %s\n", personas[i].descripcion_plan);
-            printf("Desde: %s\n", personas[i].desde);
-            printf("Hasta: %s\n", personas[i].hasta);
-            printf("Codigo de sede: %s\n", personas[i].cod_sede);
-            printf("Ubicacion de sede: %s\n\n", personas[i].ubicacion_sede);
-        }
-    }
-
-}
-
 persona *leer_archivo(char *nombre_archivo, int *num_personas) {
     FILE *fp = fopen(nombre_archivo, "r");
     if (fp == NULL) {
@@ -42,14 +25,16 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas) {
 
     while (fgets(linea, MAX_LEN, fp)) { // Leer el resto de las líneas
 
-        // Asignar memoria para una nueva persona
-        persona *temp = realloc(personas, (n + 1) * sizeof(persona));
+        // 1- Asignar memoria para una nueva persona
+        persona *temp = realloc(personas, (n + 1) * sizeof(persona)); // temp apuntará al nuevo bloque de memoria que contiene el arreglo de estructuras persona con n+1 elementos.
         if (temp == NULL) {
             printf("Error al asignar memoria.\n");
             fclose(fp);
             return NULL;
         }
-        personas = temp;
+        personas = temp; //2
+        // personas = realloc(personas, (n + 1) * sizeof(persona)); //las lineas 1 y 2 son equivalentes a esta linea, pero es una mala practica
+
 
         char *rut_str;
         char *nombre_str;
@@ -129,14 +114,15 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas) {
             .cod_sede = (cod_sede_str != NULL && strlen(cod_sede_str) != 0) ? strdup(cod_sede_str) : NULL,
             .ubicacion_sede = (ubicacion_sede_str != NULL && strlen(ubicacion_sede_str) != 0) ? strdup(ubicacion_sede_str) : NULL,
         };
+        
         personas[n++] = p;
 
     }
     fclose(fp);
+
     *num_personas = n;
     return personas;
 }
-
 
 bool validar_rut(persona *personas, int num_personas, char* rut){
     /* 
@@ -159,11 +145,12 @@ bool validar_rut(persona *personas, int num_personas, char* rut){
     return true;
 }
 
-persona escanear_datos(){
-    //Lectura de datos
+persona escanear_datos(){ 
     persona nueva_persona;
 
     char linea[MAX_LEN];
+
+    //Lectura de datos
     printf("Ingrese los siguientes datos solicitados por consola\n\n");
     
     printf("RUT (sin puntos ni guión): ");
@@ -181,7 +168,6 @@ persona escanear_datos(){
     linea[strcspn(linea, "\n")] = '\0';
     nueva_persona.edad = atoi(linea);
 
-
     printf("Codigo del plan:");
     fgets(linea, MAX_LEN, stdin);
     linea[strcspn(linea, "\n")] = '\0';
@@ -192,12 +178,10 @@ persona escanear_datos(){
     linea[strcspn(linea, "\n")] = '\0';
     nueva_persona.descripcion_plan = strdup(linea);
 
-    
     printf("Fecha de inicio (AAAA/MM/DD): ");
     fgets(linea, MAX_LEN, stdin);
     linea[strcspn(linea, "\n")] = '\0';
     nueva_persona.desde = strdup(linea);
-
     
     printf("Fecha de termino (AAAA/MM/DD): ");
     fgets(linea, MAX_LEN, stdin);
@@ -208,14 +192,12 @@ persona escanear_datos(){
     fgets(linea, MAX_LEN, stdin);
     linea[strcspn(linea, "\n")] = '\0';
     nueva_persona.cod_sede = strdup(linea);
-
     
     printf("Ubicacion de sede: ");
     fgets(linea, MAX_LEN, stdin);
     linea[strcspn(linea, "\n")] = '\0';
     nueva_persona.ubicacion_sede = strdup(linea);
 
-    // crear estructura con datos ingresados    
    return nueva_persona;
 }
 
@@ -287,6 +269,43 @@ void agregar_persona(persona *personas, int *num_personas){
     
 }
 
+void eliminar_persona(persona *personas, int *num_personas){
+    // Se supone que estos datos hay que leerlos, pero ahora los pongo para probar la funcion
+    int i;
+    
+    // Reasigno espacio memoria para agregar una nueva persona
+    persona *temp = realloc(personas, (*num_personas) * sizeof(persona));
+
+    char *rut_eliminar; //Lee Brown
+    char linea[MAX_LEN];
+
+    printf("Ingrese RUT (sin puntos ni guion): ");
+    fgets(linea, MAX_LEN, stdin);
+    linea[strcspn(linea, "\n")] = '\0';
+
+    rut_eliminar = strdup(linea);
+    char *rut_1,*rut_2;
+
+    for (i = 0; i < *num_personas; i++){
+        rut_1 = strdup(rut_eliminar); // Obtener posicion 1era letra del apellido de la persona j. Retorna un puntero al primer carácter encontrado en la cadena o un puntero nulo si el carácter no se encuentra.
+
+        rut_2 = temp[i].rut; // Obtener puntero a la 1era letra del apellido de la persona j+1
+
+        // Búsqueda de la posicion donde agregar a la persona
+        if(strcmp(rut_1, rut_2) == 0){
+            break; // el for se rompe cuando encuentro la posicion y obtengo el i
+        }
+    }
+    
+    // Mover a las personas que deben ir a la derecha de la persona i (a la derecha)
+    for (int j = *num_personas-1; j > i; j--){
+        temp[j] = temp[j+1];
+    }
+
+    *num_personas -= 1;
+    personas = temp;
+}
+
 void bubble_sort_por_apellido(persona *personas, int num_personas) {
     /* 
     * Funcion ordena el arreglo de estructuras segun el apellido de cada estructura.
@@ -311,6 +330,23 @@ void bubble_sort_por_apellido(persona *personas, int num_personas) {
             }
         }
     }
+}
+
+void imprimir_personas(persona *personas, int num_personas) {
+    if (personas != NULL) {
+        for (int i = 0; i < num_personas; i++) {
+            printf("RUT: %s\n", personas[i].rut);
+            printf("Nombre completo: %s\n", personas[i].nombre_completo);
+            printf("Edad: %d\n", personas[i].edad);
+            printf("Codigo de plan: %s\n", personas[i].cod_plan);
+            printf("Descripcion de plan: %s\n", personas[i].descripcion_plan);
+            printf("Desde: %s\n", personas[i].desde);
+            printf("Hasta: %s\n", personas[i].hasta);
+            printf("Codigo de sede: %s\n", personas[i].cod_sede);
+            printf("Ubicacion de sede: %s\n\n", personas[i].ubicacion_sede);
+        }
+    }
+
 }
 
 void buscar_persona(persona *personas, int num_personas){
@@ -346,8 +382,9 @@ int main() {
     bubble_sort_por_apellido(personas, num_personas); // ordenar por apellido
     // imprimir_personas(personas, num_personas); // mostrar todas los personas
     // buscar_persona(personas, num_personas); // buscar una persona por rut
-    agregar_persona(personas, &num_personas); //agregar persona, notar que modifica num_personas
+    // agregar_persona(personas, &num_personas); //agregar persona, notar que modifica num_personas
     // imprimir_personas(personas, num_personas); // mostrar todas los personas
+    eliminar_persona(personas, &num_personas); // eliminar persona
     imprimir_personas(personas, num_personas); // mostrar todas los personas
 
 
