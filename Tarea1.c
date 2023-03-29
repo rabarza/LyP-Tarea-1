@@ -225,18 +225,6 @@ void agregar_persona(persona *personas, int *num_personas){
     char *hasta_str;
     char *cod_sede_str;
     char *ubicacion_sede_str;
-    // Se supone que estos datos hay que leerlos, pero ahora los pongo para probar la funcion
-    // persona nueva_persona = {
-    //         .rut = "21151054-4",
-    //         .nombre_completo = "Rolando Zzzzzz",
-    //         .edad = atoi("23"),
-    //         .cod_plan = "PLNPRM",
-    //         .descripcion_plan = "Plan Premium",
-    //         .desde = "Desde Siempre",
-    //         .hasta = "Hasta Siempre",
-    //         .cod_sede = "MLC",
-    //         .ubicacion_sede = "Malloco",
-    // };
 
     persona nueva_persona = escanear_datos();
     // validar si se puede agregar al arreglo de estructuras
@@ -261,7 +249,7 @@ void agregar_persona(persona *personas, int *num_personas){
         }
 
         personas = temp;
-
+        free(temp);
         personas[i] = nueva_persona; // insertar la nueva persona en el arreglo en la posicion i
         *num_personas += 1;
 
@@ -271,8 +259,7 @@ void agregar_persona(persona *personas, int *num_personas){
 
 void eliminar_persona(persona *personas, int *num_personas){
     
-
-    char *rut_eliminar; //Lee Brown
+    char *rut_eliminar;
     char linea[MAX_LEN];
 
     printf("Ingrese RUT (sin puntos y con guion): ");
@@ -305,15 +292,6 @@ void eliminar_persona(persona *personas, int *num_personas){
     
     // Mover una posicion a la izquierda a las personas iban a la derecha de la persona i (la que se elimina)
     int j;
-    // esto tiene logica pero no sirve ya que el arreglo queda hasta la ultima persona que habia antes de la que se elimino y despues todas se igualan al ultimo
-    // creo que eso pasa porque el valor anterior se iguala al siguiente, y si eso se hace iterativamente todos queden iguales si se parte de atras para adelante.
-    // en otro caso: si el ultimo valor es Juan Zastrow, todos los que van antes de él serán iguales a Juan Zastrow
-
-    // for (j = *num_personas-1; j > i; j--){
-    //     temp[j-1] = temp[j];
-    // }
-    
-    // Esto es lo correcto:
     for (j = i; j < *num_personas; j++){
         personas[j] = personas[j+1];
     } 
@@ -321,18 +299,15 @@ void eliminar_persona(persona *personas, int *num_personas){
     *num_personas--; // la cantidad de personas disminuye una unidad
     
     // Reasigno espacio memoria luego de eliminar a la persona (disminuye de acuerdo al nuevo *num_personas)
-    // NOTA: debo ver como liberar el ultimo elemento del arreglo (que ya no se está usando) porque solo reduje el numero de personas
     persona *temp = realloc(personas, (*num_personas) * sizeof(persona));
 
     if(temp == NULL){
         printf("Error de reasignación de memoria");
     }else{
         personas = temp; //el puntero del arreglo de personas ahora apunta a la direccion de memoria de temp
+        free(temp);
         printf("\nEliminacion exitosa: el usuario ya no pertenece a la base de datos\n");
     }
-
-
-
 }
 
 void bubble_sort_por_apellido(persona *personas, int num_personas) {
