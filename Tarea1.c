@@ -296,7 +296,7 @@ void eliminar_persona(persona *personas, int *num_personas){
         personas[j] = personas[j+1];
     } 
 
-    *num_personas--; // la cantidad de personas disminuye una unidad
+    *num_personas-=1; // la cantidad de personas disminuye una unidad
     
     // Reasigno espacio memoria luego de eliminar a la persona (disminuye de acuerdo al nuevo *num_personas)
     persona *temp = realloc(personas, (*num_personas) * sizeof(persona));
@@ -305,7 +305,7 @@ void eliminar_persona(persona *personas, int *num_personas){
         printf("Error de reasignación de memoria");
     }else{
         personas = temp; //el puntero del arreglo de personas ahora apunta a la direccion de memoria de temp
-        free(temp);
+        // free(temp);
         printf("\nEliminacion exitosa: el usuario ya no pertenece a la base de datos\n");
     }
 }
