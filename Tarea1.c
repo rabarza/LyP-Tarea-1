@@ -127,7 +127,7 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas) {
 bool validar_rut(persona *personas, int num_personas, char* rut){
     /* 
     * Funcion que valida el RUT como llave única de una estructura de tipo persona.
-    Devuelve 1, si la llave es única y 0 sino.
+    Devuelve 1, si la llave es única (no se encuentra en los datos) y 0 sino (si ya está registrado).
     * Parametros: 
      - *personas: puntero a la direccion de memoria del primer elemento del arreglo de estructuras de tipo `persona`.
      - RUT: llave única a ser validada
@@ -138,7 +138,7 @@ bool validar_rut(persona *personas, int num_personas, char* rut){
 
     for (int i = 0; i < num_personas; i++){
         if (strcmp(personas[i].rut, rut) == 0){ // 0 cuando se encuentra (la llave no es única)
-            printf("El RUT %s ya se encuentra registrado", rut);
+            // printf("El RUT %s ya se encuentra registrado", rut);
             return false;
         }
     }
@@ -153,7 +153,7 @@ persona escanear_datos(){
     //Lectura de datos
     printf("Ingrese los siguientes datos solicitados por consola\n\n");
     
-    printf("RUT (sin puntos ni guión): ");
+    printf("RUT (sin puntos y con guión): ");
     fgets(linea, MAX_LEN, stdin);
     linea[strcspn(linea, "\n")] = '\0';
     nueva_persona.rut = strdup(linea);
@@ -255,7 +255,7 @@ void agregar_persona(persona *personas, int *num_personas){
                 break; // el for se rompe cuando encuentro la posicion y obtengo el i
             }
         }
-        // Mover a las personas que deben ir a la derecha de la persona i
+        // Mover a las personas a la derecha a las personas que deben ir a la derecha de la persona i
         for (int j = *num_personas; j > i; j--){
             temp[j] = temp[j-1];
         }
@@ -270,40 +270,69 @@ void agregar_persona(persona *personas, int *num_personas){
 }
 
 void eliminar_persona(persona *personas, int *num_personas){
-    // Se supone que estos datos hay que leerlos, pero ahora los pongo para probar la funcion
-    int i;
     
-    // Reasigno espacio memoria para agregar una nueva persona
-    persona *temp = realloc(personas, (*num_personas) * sizeof(persona));
 
     char *rut_eliminar; //Lee Brown
     char linea[MAX_LEN];
 
-    printf("Ingrese RUT (sin puntos ni guion): ");
+    printf("Ingrese RUT (sin puntos y con guion): ");
     fgets(linea, MAX_LEN, stdin);
     linea[strcspn(linea, "\n")] = '\0';
 
     rut_eliminar = strdup(linea);
+
+    bool validador_rut = validar_rut(personas, *num_personas, rut_eliminar); //true si no existe, false si ya existe
+
+    if (validador_rut == true){
+        printf("\nValidacion RUT: Usuario no registrado\nImposible eliminar\n");
+        return; 
+    }
+    
+    printf("\nValidacion RUT exitosa --> eliminando usuario...\n");
+    
     char *rut_1,*rut_2;
 
+    rut_1 = strdup(rut_eliminar); // Obtener posicion 1era letra del apellido de la persona j. Retorna un puntero al primer carácter encontrado en la cadena o un puntero nulo si el carácter no se encuentra.
+    int i;
     for (i = 0; i < *num_personas; i++){
-        rut_1 = strdup(rut_eliminar); // Obtener posicion 1era letra del apellido de la persona j. Retorna un puntero al primer carácter encontrado en la cadena o un puntero nulo si el carácter no se encuentra.
-
-        rut_2 = temp[i].rut; // Obtener puntero a la 1era letra del apellido de la persona j+1
+        rut_2 = personas[i].rut; // Obtener puntero a la 1era letra del apellido de la persona j+1
 
         // Búsqueda de la posicion donde agregar a la persona
         if(strcmp(rut_1, rut_2) == 0){
-            break; // el for se rompe cuando encuentro la posicion y obtengo el i
+            break; // el for se rompe cuando encuentro la posicion y obtengo el i (indice de la persona a eliminar)
         }
     }
     
-    // Mover a las personas que deben ir a la derecha de la persona i (a la derecha)
-    for (int j = *num_personas-1; j > i; j--){
-        temp[j] = temp[j+1];
+    // Mover una posicion a la izquierda a las personas iban a la derecha de la persona i (la que se elimina)
+    int j;
+    // esto tiene logica pero no sirve ya que el arreglo queda hasta la ultima persona que habia antes de la que se elimino y despues todas se igualan al ultimo
+    // creo que eso pasa porque el valor anterior se iguala al siguiente, y si eso se hace iterativamente todos queden iguales si se parte de atras para adelante.
+    // en otro caso: si el ultimo valor es Juan Zastrow, todos los que van antes de él serán iguales a Juan Zastrow
+
+    // for (j = *num_personas-1; j > i; j--){
+    //     temp[j-1] = temp[j];
+    // }
+    
+    // Esto es lo correcto:
+    for (j = i; j < *num_personas; j++){
+        personas[j] = personas[j+1];
+    } 
+
+    *num_personas--; // la cantidad de personas disminuye una unidad
+    
+    // Reasigno espacio memoria luego de eliminar a la persona (disminuye de acuerdo al nuevo *num_personas)
+    // NOTA: debo ver como liberar el ultimo elemento del arreglo (que ya no se está usando) porque solo reduje el numero de personas
+    persona *temp = realloc(personas, (*num_personas) * sizeof(persona));
+
+    if(temp == NULL){
+        printf("Error de reasignación de memoria");
+    }else{
+        personas = temp; //el puntero del arreglo de personas ahora apunta a la direccion de memoria de temp
+        printf("\nEliminacion exitosa: el usuario ya no pertenece a la base de datos\n");
     }
 
-    *num_personas -= 1;
-    personas = temp;
+
+
 }
 
 void bubble_sort_por_apellido(persona *personas, int num_personas) {
@@ -356,22 +385,29 @@ void buscar_persona(persona *personas, int num_personas){
      - *personas: puntero a la direccion de memoria del primer elemento del arreglo de estructuras de tipo `persona`.
      - *num_personas: puntero a variable de tipo entero que indica el numero de estructuras de personas en el arreglo. 
     */
+    char linea[MAX_LEN];
     char *rut;
-    rut = "12344575-9"; // A MODO DE EJEMPLO. LO CORRECTO ES LEER EL VALOR EN LA FUNCION
-
-    printf("Buscando a la persona con RUT: %s...\n", rut);
+   
+    printf("Ingrese RUT (sin puntos y con guion): ");
+    fgets(linea, MAX_LEN, stdin); //fgets agrega un salto de linea luego de captar una linea 
+    linea[strcspn(linea, "\n")] = '\0'; //ese salto de linea se reemplaza por el caracter nulo
+    rut = strdup(linea);
+    printf("\nBuscando a la persona con RUT: %s...\n", rut);
 
     for (int i = 0; i < num_personas; i++){
         if (strcmp(personas[i].rut, rut) == 0){ //0 cuando son iguales
-            printf("Encontrada!\n\n");
             // Creo lista de estructuras de tamaño 1 para poder pasarlo como argumento a la funcion que recibe como parametros una lista de estructuras
             persona lista[1];
             lista[0] = personas[i]; // asigno al unico elemento de esta lista la estructura deseada
-            imprimir_personas(lista,1);
+
+            // Imprimir resultados
+            printf("Usuario localizado en la base de datos\n\n"); // imprimir mensaje de localizado
+            imprimir_personas(lista,1); // imprimir datos del usuario
+
             return;
         }
     }
-    printf("La persona no se encuentra");
+    printf("El usuario no se encuentra en la base de datos"); // 
 }
 
 
@@ -381,11 +417,13 @@ int main() {
     persona *personas = leer_archivo("BigMuscle.csv", &num_personas);
     bubble_sort_por_apellido(personas, num_personas); // ordenar por apellido
     // imprimir_personas(personas, num_personas); // mostrar todas los personas
-    // buscar_persona(personas, num_personas); // buscar una persona por rut
+    buscar_persona(personas, num_personas); // buscar una persona por rut
     // agregar_persona(personas, &num_personas); //agregar persona, notar que modifica num_personas
     // imprimir_personas(personas, num_personas); // mostrar todas los personas
     eliminar_persona(personas, &num_personas); // eliminar persona
     imprimir_personas(personas, num_personas); // mostrar todas los personas
+    // buscar_persona(personas, num_personas); // buscar una persona por rut
+
 
 
     return 0;
