@@ -3,3 +3,4 @@ Enunciado
 
 # Ignora archivos ejecutables
 *.exe
+*.o
