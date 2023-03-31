@@ -27,16 +27,16 @@ int validar_orden_fechas(char *fecha_antes, char *fecha_despues) {
 		/* 
 		* Funcion que valida el orden de las fechas como creciente, decreciente o invalido. El formato de las fechas es "AAAA/MM/DD"
     Devuelve: 
-		- 0 si La fecha_antes ocurre después o es igual que la fecha_despues.
+		* 0 si La fecha_antes ocurre después o es igual que la fecha_despues.
 		* 1 La fecha_antes ocurre antes que la fecha_despues.
 		* 2 La fecha_despues es nula.
 		* 3 La fecha_antes es nula.
 		*-1 Formato de fechas invalido.
 	
     * Parametros: 
-     - *fecha_antes: puntero a la direccion de memoria del primer 			elemento del arreglo de caracteres fecha_antes.
+     - *fecha_antes: puntero a la direccion de memoria del primer elemento del arreglo de caracteres fecha_antes.
 		 
-		 - *fecha_despues: puntero a la direccion de memoria del primer 			elemento del arreglo de caracteres fecha_despues.
+		 - *fecha_despues: puntero a la direccion de memoria del primer elemento del arreglo de caracteres fecha_despues.
 	 */
     int year_1 = 0, month_1 = 0, day_1 = 0;
     int year_2 = 0, month_2 = 0, day_2 = 0;
@@ -100,35 +100,34 @@ void intercambiar_fechas(char **fecha_antes, char **fecha_despues){
 }
 
 void reformatear_fechas(char **fecha_antes, char **fecha_despues){
-    printf("\n\nREFORMATEAR FECHAS\n");
+    // printf("\n\nREFORMATEAR FECHAS\n");
     if (**fecha_antes != '\0' && **fecha_despues == '\0'){ //falta el despues -> Agregar despues = antes + 3meses
-        printf("Modificar valores FECHA_DESPUES (Sumar 3 meses)\n");
-				*fecha_despues = malloc(sizeof(char)*11); //asignar memoria al puntero de fecha que es vacio
+        // printf("Modificar valores FECHA_DESPUES (Sumar 3 meses)\n");
+		*fecha_despues = malloc(sizeof(char)*11); //asignar memoria al puntero de fecha que es vacio
         time tiempo;
 			
-        printf("Fecha antes: %s\n", *fecha_antes);
+        // printf("Fecha antes: %s\n", *fecha_antes);
         string_to_timestruct(&tiempo, *fecha_antes);
 
         tiempo.month += 3;
         update_time(&tiempo);
 
         timestruct_to_string(*fecha_despues, &tiempo);
-        // printf("Fecha antes (modificada): %s\n", fecha_antes);
-        printf("Fecha despues (modificada): %s\n", *fecha_despues);
+        // printf("Fecha despues (modificada): %s\n", *fecha_despues);
 			
     }else if (**fecha_antes == '\0' && **fecha_despues != '\0'){ //falta el antes -> Agregar antes = despues - 3meses
-        printf("Modificar valores FECHA_ANTES (Restar 3 meses)\n");
+        // printf("Modificar valores FECHA_ANTES (Restar 3 meses)\n");
 				
-				*fecha_antes = malloc(sizeof(char)*11);
+		*fecha_antes = malloc(sizeof(char)*11);
         time tiempo;
 			
-        printf("Fecha despues: %s\n", *fecha_despues);
+        // printf("Fecha despues: %s\n", *fecha_despues);
         string_to_timestruct(&tiempo, *fecha_despues);
         tiempo.month -= 3;
         update_time(&tiempo);
 	
         timestruct_to_string(*fecha_antes, &tiempo); 
-        printf("Fecha antes (modificada): %s\n", *fecha_antes);
+        // printf("Fecha antes (modificada): %s\n", *fecha_antes);
 			
     }
 }

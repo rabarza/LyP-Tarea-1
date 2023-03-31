@@ -29,12 +29,12 @@ void string_to_timestruct(time *tiempo, char *fecha){
     tiempo->day = day;
     tiempo->month = month;
     tiempo->year = year;
-		printf("String to TimeSruct\n");
-		printf("Datos del String %s\n", fecha);
-		printf("Datos estructurados\n");
-    printf("YEAR: %d\n", tiempo->year);
-    printf("MONTH: %d\n", tiempo->month);
-    printf("DAY: %d\n", tiempo->day);
+	// printf("String to TimeSruct\n");
+	// // printf("Datos del String %s\n", fecha);
+	// printf("Datos estructurados\n");
+    // printf("YEAR: %d\n", tiempo->year);
+    // printf("MONTH: %d\n", tiempo->month);
+    // printf("DAY: %d\n", tiempo->day);
     return;
 }
 
@@ -54,10 +54,10 @@ void update_time(time *tiempo){
 				tiempo->year -= 1;
 				tiempo->month = 12;
 		}
-    printf("Datos actualizados\n");
-    printf("YEAR: %d\n", tiempo->year);
-    printf("MONTH: %d\n", tiempo->month);
-    printf("DAY: %d\n", tiempo->day);
+    // printf("Datos actualizados\n");
+    // printf("YEAR: %d\n", tiempo->year);
+    // printf("MONTH: %d\n", tiempo->month);
+    // printf("DAY: %d\n", tiempo->day);
 }
 
 void timestruct_to_string(char *fecha, time *tiempo){

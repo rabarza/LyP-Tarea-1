@@ -100,19 +100,19 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas) {
         validador_rut = validar_rut(temp, n, rut_str);
         validador_fechas = validar_orden_fechas(desde_str, hasta_str);
 
-        printf("Validador fechas: %d\n", validador_fechas);
         if (validador_fechas == 0){
-            // intercambiar fechas LISTO
+            // intercambiar fechas
             // printf("Intercambiar fechas");
-						// printf("fecha_antes: %s, fecha_despues %s", desde_str, hasta_str);
+			// printf("fecha_antes: %s, fecha_despues %s", desde_str, hasta_str);
             intercambiar_fechas(&desde_str, &hasta_str);
-						// printf("fecha_antes: %s, fecha_despues %s", desde_str, hasta_str);
+			// printf("fecha_antes: %s, fecha_despues %s", desde_str, hasta_str);
 					
 					
         } else if (validador_fechas == 2 || validador_fechas == 3){
-						printf("\n\nfecha_antes: %s, fecha_despues %s\n", desde_str, hasta_str);
+            // Realizar correccion en formato de fechas
+			// printf("\n\nfecha_antes: %s, fecha_despues %s\n", desde_str, hasta_str);
             reformatear_fechas(&desde_str, &hasta_str);
-						printf("\n\nfecha_antes: %s, fecha_despues %s\n", desde_str, hasta_str);
+			// printf("\n\nfecha_antes: %s, fecha_despues %s\n", desde_str, hasta_str);
 					
         }
 				if (validador_rut == 1 && validador_fechas != -1){
@@ -151,7 +151,7 @@ persona escanear_datos(){
     linea[strcspn(linea, "\n")] = '\0';
     nueva_persona.rut = strdup(linea);
 
-    printf("\nNombre completo (Nombre Apellido):");
+    printf("\nNombre completo (Nombre Apellido): ");
     fgets(linea, MAX_LEN, stdin);
     linea[strcspn(linea, "\n")] = '\0';
     nueva_persona.nombre_completo = strdup(linea);
@@ -161,7 +161,7 @@ persona escanear_datos(){
     linea[strcspn(linea, "\n")] = '\0';
     nueva_persona.edad = atoi(linea);
 
-    printf("Codigo del plan:");
+    printf("Codigo del plan: ");
     fgets(linea, MAX_LEN, stdin);
     linea[strcspn(linea, "\n")] = '\0';
     nueva_persona.cod_plan = strdup(linea);
@@ -203,8 +203,6 @@ void agregar_persona(persona *personas, int *num_personas){
      - *personas: puntero a la direccion de memoria del primer elemento del arreglo de estructuras de tipo `persona`.
      - *num_personas: puntero a variable de tipo entero que indica el numero de estructuras de personas en el arreglo
     */
-    printf("ACA NO HUBO ERROR");
-
     int i;
     // Reasigno espacio memoria para agregar una nueva persona
     persona *temp = realloc(personas, (*num_personas + 1) * sizeof(persona));
@@ -384,5 +382,5 @@ void buscar_persona(persona *personas, int num_personas){
             return;
         }
     }
-    printf("El usuario no se encuentra en la base de datos"); // 
+    printf("El usuario no se encuentra en la base de datos\n");
 }
