@@ -95,8 +95,9 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas) {
             // Incrementar el contador de campos
             campo++;
         }
+
         int validador_rut, validador_fechas; 
-        
+
         validador_rut = validar_rut(temp, n, rut_str);
         validador_fechas = validar_orden_fechas(desde_str, hasta_str);
 
@@ -115,22 +116,22 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas) {
 			// printf("\n\nfecha_antes: %s, fecha_despues %s\n", desde_str, hasta_str);
 					
         }
-				if (validador_rut == 1 && validador_fechas != -1){
-						        // Guardar los datos en la nueva persona (no modificable)
-        		persona p = {
-            		.rut = (rut_str != NULL && strlen(rut_str) != 0) ? strdup(rut_str) : "0000000-0",
-            		.nombre_completo = (nombre_str != NULL && strlen(nombre_str) != 0) ? strdup(nombre_str) : "SinNombre SinApellido",
-            		.edad = (edad_str != NULL && strlen(edad_str) != 0) ? atoi(edad_str) : 0,
-            		.cod_plan = (cod_plan_str != NULL && strlen(cod_plan_str) != 0) ? strdup(cod_plan_str) : NULL,
-            		.descripcion_plan = (descripcion_plan_str != NULL && strlen(descripcion_plan_str) != 0) ? strdup(descripcion_plan_str) : NULL,
-            		.desde = (desde_str != NULL && strlen(desde_str) != 0) ? strdup(desde_str) : NULL,
-            		.hasta = (hasta_str != NULL && strlen(hasta_str) != 0) ? strdup(hasta_str) : NULL,
-            		.cod_sede = (cod_sede_str != NULL && strlen(cod_sede_str) != 0) ? strdup(cod_sede_str) : NULL,
-            		.ubicacion_sede = (ubicacion_sede_str != NULL && strlen(ubicacion_sede_str) != 0) ? strdup(ubicacion_sede_str) : NULL,
-        		};
-
-        		personas[n++] = p;
-				}
+		if (validador_rut == 1 && validador_fechas != -1){ // se cumple la validacion requerida
+            // Guardar los datos en la nueva persona (no modificable)
+        	persona p = {
+            	.rut = (rut_str != NULL && strlen(rut_str) != 0) ? strdup(rut_str) : "0000000-0",
+            	.nombre_completo = (nombre_str != NULL && strlen(nombre_str) != 0) ? strdup(nombre_str) : "SinNombre SinApellido",
+            	.edad = (edad_str != NULL && strlen(edad_str) != 0) ? atoi(edad_str) : 0,
+            	.cod_plan = (cod_plan_str != NULL && strlen(cod_plan_str) != 0) ? strdup(cod_plan_str) : NULL,
+            	.descripcion_plan = (descripcion_plan_str != NULL && strlen(descripcion_plan_str) != 0) ? strdup(descripcion_plan_str) : NULL,
+            	.desde = (desde_str != NULL && strlen(desde_str) != 0) ? strdup(desde_str) : NULL,
+            	.hasta = (hasta_str != NULL && strlen(hasta_str) != 0) ? strdup(hasta_str) : NULL,
+            	.cod_sede = (cod_sede_str != NULL && strlen(cod_sede_str) != 0) ? strdup(cod_sede_str) : NULL,
+            	.ubicacion_sede = (ubicacion_sede_str != NULL && strlen(ubicacion_sede_str) != 0) ? strdup(ubicacion_sede_str) : NULL,
+        	};
+        	personas[n++] = p;
+            
+		}
     }
     fclose(fp);
 
