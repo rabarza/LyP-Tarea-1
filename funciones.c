@@ -101,7 +101,7 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas) {
         validador_rut = validar_rut(temp, n, rut_str);
         validador_fechas = validar_orden_fechas(desde_str, hasta_str);
 
-        if (validador_fechas == 0){
+        if (validador_fechas == 0){ // las fechas estan al reves
             // intercambiar fechas
             // printf("Intercambiar fechas");
 			// printf("fecha_antes: %s, fecha_despues %s", desde_str, hasta_str);
@@ -109,14 +109,15 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas) {
 			// printf("fecha_antes: %s, fecha_despues %s", desde_str, hasta_str);
 					
 					
-        } else if (validador_fechas == 2 || validador_fechas == 3){
-            // Realizar correccion en formato de fechas
+        } else if (validador_fechas == 2 || validador_fechas == 3){ // falta una de las fechas
+            // Realizar correccion del formato de fechas
 			// printf("\n\nfecha_antes: %s, fecha_despues %s\n", desde_str, hasta_str);
             reformatear_fechas(&desde_str, &hasta_str);
 			// printf("\n\nfecha_antes: %s, fecha_despues %s\n", desde_str, hasta_str);
 					
         }
-		if (validador_rut == 1 && validador_fechas != -1){ // se cumple la validacion requerida
+        //validar si se puede agregar la persona al arreglo
+		if (validador_rut == 1 && validador_fechas != -1){
             // Guardar los datos en la nueva persona (no modificable)
         	persona p = {
             	.rut = (rut_str != NULL && strlen(rut_str) != 0) ? strdup(rut_str) : "0000000-0",

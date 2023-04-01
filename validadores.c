@@ -5,10 +5,12 @@
 bool validar_rut(persona *personas, int num_personas, char* rut){
     /* 
     * Funcion que valida el RUT como llave única de una estructura de tipo persona.
-    Devuelve 1, si la llave es única (no se encuentra en los datos) y 0 sino (si ya está registrado).
+    Devuelve: 
+        true: si la llave es única (no se encuentra en los datos) y, 
+        false: la llave no es única (si el usuario de ID RUT ya está registrado).
     * Parametros: 
-     - *personas: puntero a la direccion de memoria del primer elemento del arreglo de estructuras de tipo `persona`.
-     - RUT: llave única a ser validada
+     -*personas: puntero a la direccion de memoria del primer elemento del arreglo de estructuras de tipo `persona`.
+     - rut: llave única a ser validada (puntero al arreglo de caracteres que representa la llave única).
      - num_personas: variable entera que indica el numero de personas en el arreglo *personas.
     */
 
@@ -24,8 +26,8 @@ bool validar_rut(persona *personas, int num_personas, char* rut){
 }
 
 int validar_orden_fechas(char *fecha_antes, char *fecha_despues) {
-		/* 
-		* Funcion que valida el orden de las fechas como creciente, decreciente o invalido. El formato de las fechas es "AAAA/MM/DD"
+	/* 
+	* Funcion que valida el orden de las fechas como creciente, decreciente o invalido. El formato de las fechas es "AAAA/MM/DD"
     Devuelve: 
 		* 0 si La fecha_antes ocurre después o es igual que la fecha_despues.
 		* 1 La fecha_antes ocurre antes que la fecha_despues.
@@ -34,10 +36,9 @@ int validar_orden_fechas(char *fecha_antes, char *fecha_despues) {
 		*-1 Formato de fechas invalido.
 	
     * Parametros: 
-     - *fecha_antes: puntero a la direccion de memoria del primer elemento del arreglo de caracteres fecha_antes.
-		 
-		 - *fecha_despues: puntero a la direccion de memoria del primer elemento del arreglo de caracteres fecha_despues.
-	 */
+    - *fecha_antes: puntero a la direccion de memoria del primer elemento del arreglo de caracteres fecha_antes.
+	- *fecha_despues: puntero a la direccion de memoria del primer elemento del arreglo de caracteres fecha_despues.
+	*/
     int year_1 = 0, month_1 = 0, day_1 = 0;
     int year_2 = 0, month_2 = 0, day_2 = 0;
     
@@ -45,16 +46,15 @@ int validar_orden_fechas(char *fecha_antes, char *fecha_despues) {
     if (*fecha_antes != '\0' && *fecha_despues == '\0'){ // falta el despues
         return 2; // fecha antes = fecha despues - 3 meses
 
-    }else if (*fecha_antes == '\0' && *fecha_despues != '\0'){ //falta el antes
+    } else if (*fecha_antes == '\0' && *fecha_despues != '\0'){ // falta el antes
         return 3; // fecha despues = fecha antes + 3 meses
-
     }
 
     // Obtener año, mes y día de fecha_antes
     int i = 0, j = 0; // i recorre los indices del arreglo, y j recorre si es año, mes, o día
     while (fecha_antes[i] != '\0') { // mientras no haya terminado de recorrer el arreglo
         if (fecha_antes[i] == '/' || fecha_antes[i] == '-') { // se produce cambio de indicador j (año, mes, día)
-						//Corregir formato a separador '/' solamente
+						// Corregir formato a separador '/' solamente
 						fecha_antes[i] = '/'; 
 						fecha_despues[i] = '/';
             j++; // cambiar el tipo de dato (año, mes, dia)
@@ -78,7 +78,8 @@ int validar_orden_fechas(char *fecha_antes, char *fecha_despues) {
         }
         i++;
     }
-	    // validar formato
+	
+    // validar formato
     if (((fecha_antes[4] != '/' && fecha_antes[4] != '-') || (fecha_antes[7] != '/' && fecha_antes[7] != '-')) || ((fecha_despues[4] != '/' && fecha_antes[4] != '-') || (fecha_despues[7] != '/' && fecha_antes[7] != '-')) || (*fecha_antes == '\0' && *fecha_despues == '\0')){
         return -1; // formato de fechas invalido
     }
@@ -94,28 +95,42 @@ int validar_orden_fechas(char *fecha_antes, char *fecha_despues) {
 
 // Arreglar problemas fechas al reves
 void intercambiar_fechas(char **fecha_antes, char **fecha_despues){
+    /*
+    * Función que intercambia dos punteros de formato fecha.
+    * Parámetros:
+        -**fecha_antes: puntero a la direccion de memoria del puntero *fecha_antes.
+        -**fecha_despues: puntero a la direccion de memoria del puntero *fecha_despues.
+    */
     char *temp = *fecha_antes;
     *fecha_antes = *fecha_despues;
     *fecha_despues = temp;
 }
 
 void reformatear_fechas(char **fecha_antes, char **fecha_despues){
+    /*
+    * Funcion que dados dos arreglos de caracteres de formato fecha (y uno faltante), corrige aquel que falta. 
+      Se considera que aquella fecha que falta ocurre 3 meses antes (o después) que la que no falta, dependiendo del caso.
+    * Parametros: 
+    - *fecha_antes: puntero a la direccion de memoria del primer elemento del arreglo de caracteres fecha_antes.
+    - *fecha_despues: puntero a la direccion de memoria del primer elemento del arreglo de caracteres fecha_despues.
+    */
     // printf("\n\nREFORMATEAR FECHAS\n");
     if (**fecha_antes != '\0' && **fecha_despues == '\0'){ //falta el despues -> Agregar despues = antes + 3meses
         // printf("Modificar valores FECHA_DESPUES (Sumar 3 meses)\n");
-		*fecha_despues = malloc(sizeof(char)*11); //asignar memoria al puntero de fecha que es vacio
-        time tiempo;
+
+		*fecha_despues = malloc(sizeof(char)*11); // asignar memoria al puntero de fecha que es vacio
+        time tiempo; // crear estructura de tipo time
 			
         // printf("Fecha antes: %s\n", *fecha_antes);
-        string_to_timestruct(&tiempo, *fecha_antes);
+        string_to_timestruct(&tiempo, *fecha_antes); // llevar los datos del string que no falta a la estructura de tiempo
 
-        tiempo.month += 3;
-        update_time(&tiempo);
+        tiempo.month += 3; // sumar tres meses a la estructura de tiempo
+        update_time(&tiempo); // se actualizan los datos de la estructura de tiempos a un formato de fecha valido
 
-        timestruct_to_string(*fecha_despues, &tiempo);
+        timestruct_to_string(*fecha_despues, &tiempo); // llevar la estructura de tiempo al string que falta (*fecha_despues)
         // printf("Fecha despues (modificada): %s\n", *fecha_despues);
 			
-    }else if (**fecha_antes == '\0' && **fecha_despues != '\0'){ //falta el antes -> Agregar antes = despues - 3meses
+    } else if (**fecha_antes == '\0' && **fecha_despues != '\0'){ //falta el antes -> Agregar antes = despues - 3meses
         // printf("Modificar valores FECHA_ANTES (Restar 3 meses)\n");
 				
 		*fecha_antes = malloc(sizeof(char)*11);
@@ -123,12 +138,11 @@ void reformatear_fechas(char **fecha_antes, char **fecha_despues){
 			
         // printf("Fecha despues: %s\n", *fecha_despues);
         string_to_timestruct(&tiempo, *fecha_despues);
-        tiempo.month -= 3;
+
+        tiempo.month -= 3; // restar tres meses a la estructura de tiempo
         update_time(&tiempo);
 	
-        timestruct_to_string(*fecha_antes, &tiempo); 
-        // printf("Fecha antes (modificada): %s\n", *fecha_antes);
-			
+        timestruct_to_string(*fecha_antes, &tiempo); // llevar la estructura de tiempo al string que falta (*fecha_antes)
+        // printf("Fecha antes (modificada): %s\n", *fecha_antes);	
     }
 }
-
