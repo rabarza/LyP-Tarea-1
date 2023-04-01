@@ -15,14 +15,18 @@ bool validar_rut(persona *personas, int num_personas, char* rut){
     */
 
    // validando el rut
-    
-    for (int i = 0; i < num_personas; i++){
-        if (strcmp(personas[i].rut, rut) == 0){ // 0 cuando se encuentra (la llave no es única)
-            // printf("El RUT %s ya se encuentra registrado", rut);
-            return false;
+    if (*rut != '\0'){
+        for (int i = 0; i < num_personas; i++){
+            if (strcmp(personas[i].rut, rut) == 0){ // 0 cuando se encuentra (la llave no es única)
+                // printf("El RUT %s ya se encuentra registrado", rut);
+                return false;
+            }
         }
+        return true;
     }
-    return true;
+    else{
+        return false;
+    }
 }
 
 int validar_orden_fechas(char *fecha_antes, char *fecha_despues) {
