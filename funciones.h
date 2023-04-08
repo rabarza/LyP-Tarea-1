@@ -18,10 +18,22 @@ typedef struct {
     char *ubicacion_sede;
 } persona;
 
+typedef struct {
+    char *cod_plan;
+    char *descripcion_plan;
+    int n_clientes_plan;
+} plan;
+
+typedef struct {
+    char *cod_sede;
+    char *ubicacion_sede;
+    int n_clientes_sede;
+
+} sede;
 
 // Declaracion funciones
 persona escanear_datos();
-persona *leer_archivo(char *nombre_archivo, int *num_personas);
+persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, int *num_sedes, plan *planes, sede *sedes); // modificacion planes
 void bubble_sort_por_apellido(persona *personas, int num_personas);
 void imprimir_personas(persona *personas, int num_personas);
 void agregar_persona(persona *personas, int *num_personas);

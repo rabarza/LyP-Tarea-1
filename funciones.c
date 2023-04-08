@@ -2,7 +2,7 @@
 #include "validadores.h"
 
 
-persona *leer_archivo(char *nombre_archivo, int *num_personas) {
+persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, int *num_sedes, plan *planes, sede *sedes) {
     FILE *fp = fopen(nombre_archivo, "r");
     if (fp == NULL) {
         printf("Error al abrir el archivo.\n");
@@ -95,6 +95,10 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas) {
             // Incrementar el contador de campos
             campo++;
         }
+
+        // Agregar for que recorra las sedes y vea si la sede_str ya existe, si no existe, lo agrego
+        
+
 
         int validador_rut, validador_fechas; 
 
@@ -307,7 +311,7 @@ void eliminar_persona(persona *personas, int *num_personas){
     if(temp == NULL){
         printf("Error de reasignación de memoria: funcion (eliminar_persona)\n");
         return;
-    }else{
+    } else{
         personas = temp; //el puntero del arreglo de personas ahora apunta a la direccion de memoria de temp
         printf("\nEliminacion exitosa: el usuario ya no pertenece a la base de datos\n");
     }

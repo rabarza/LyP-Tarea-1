@@ -2,7 +2,7 @@
 
 
 // Validadores
-bool validar_rut(persona *personas, int num_personas, char* rut){
+int validar_rut(persona *personas, int num_personas, char* rut){
     /* 
     * Funcion que valida el RUT como llave única de una estructura de tipo persona.
     Devuelve: 
@@ -19,13 +19,13 @@ bool validar_rut(persona *personas, int num_personas, char* rut){
         for (int i = 0; i < num_personas; i++){
             if (strcmp(personas[i].rut, rut) == 0){ // 0 cuando se encuentra (la llave no es única)
                 // printf("El RUT %s ya se encuentra registrado", rut);
-                return false;
+                return 0;
             }
         }
-        return true;
+        return 1;
     }
     else{
-        return false;
+        return -1;
     }
 }
 
@@ -148,5 +148,19 @@ void reformatear_fechas(char **fecha_antes, char **fecha_despues){
 	
         timestruct_to_string(*fecha_antes, &tiempo); // llevar la estructura de tiempo al string que falta (*fecha_antes)
         // printf("Fecha antes (modificada): %s\n", *fecha_antes);	
+    }
+}
+
+
+int validar_sede(int num_sedes, sede *sedes, char *cod_sede){
+    if (*cod_sede != '\0'){
+        for (int i = 0; i < num_sedes; i++){
+            if(strcmp( sedes[i].cod_sede, cod_sede) == 0) {
+                return 1; // la sede ya existe
+            }
+        }
+        return 0; // la sede no existe
+    } else{
+        return -1; // sede inválida
     }
 }
