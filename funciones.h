@@ -33,7 +33,7 @@ typedef struct {
 
 // Declaracion funciones
 persona escanear_datos();
-persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, int *num_sedes, plan *planes, sede *sedes); // modificacion planes
+persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, int *num_sedes, plan **planes, sede **sedes); // modificacion planes
 void bubble_sort_por_apellido(persona *personas, int num_personas);
 void imprimir_personas(persona *personas, int num_personas);
 void agregar_persona(persona *personas, int *num_personas);

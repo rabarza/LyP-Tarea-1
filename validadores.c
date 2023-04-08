@@ -152,7 +152,7 @@ void reformatear_fechas(char **fecha_antes, char **fecha_despues){
 }
 
 
-int validar_sede(int num_sedes, sede *sedes, char *cod_sede){
+int validar_sede(sede *sedes, int num_sedes, char *cod_sede){
     if (*cod_sede != '\0'){
         for (int i = 0; i < num_sedes; i++){
             if(strcmp( sedes[i].cod_sede, cod_sede) == 0) {

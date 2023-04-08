@@ -2,7 +2,7 @@
 #include "validadores.h"
 
 
-persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, int *num_sedes, plan *planes, sede *sedes) {
+persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, int *num_sedes, plan **planes, sede **sedes) {
     FILE *fp = fopen(nombre_archivo, "r");
     if (fp == NULL) {
         printf("Error al abrir el archivo.\n");
@@ -10,17 +10,29 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
     }
     //Inicializo la estructura a un puntero NULL para luego hacer realloc de memoria
     persona *personas = NULL; //equivalente a persona *personas;
+
+    *sedes = NULL; // para poder hacer realloc al menos tiene que ser NULL
+    *planes = NULL;
+
     char linea[MAX_LEN];
 
-    int n = 0;
-    // Nota: fgets agrega un salto de linea \n al final de lo leído
-
-    fgets(linea, MAX_LEN, fp); // Leer la primera línea, que tiene los nombres de las columnas
-
-    while (fgets(linea, MAX_LEN, fp)) { // Leer el resto de las líneas
+    int n = 0; // numero temporal de personas
+    int s = 0; // numero temporal de sedes
+    int p = 0; // numero temporal de planes
+    printf("\nEntrar a leer archivo\n");
+    
+    
+    fgets(linea, MAX_LEN, fp); // Leer la primera línea, que tiene los nombres de las columnas 
+    while (fgets(linea, MAX_LEN, fp)) { // Leer el resto de las líneas. Nota: fgets agrega un salto de linea \n al final de lo leído
 
         // 1- Asignar memoria para una nueva persona
         persona *temp = realloc(personas, (n + 1) * sizeof(persona)); // temp apuntará al nuevo bloque de memoria que contiene el arreglo de estructuras persona con n+1 elementos.
+        printf("Antes del error\n");
+
+        sede *temp_s = realloc(*sedes, (s + 1) * sizeof(sede));
+        plan *temp_p = realloc(*planes, (p + 1) * sizeof(plan));
+        printf("Despues del error\n");
+
         if (temp == NULL) {
             printf("Error al asignar memoria.\n");
             fclose(fp);
@@ -28,7 +40,8 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
         }
         personas = temp; //2
         // personas = realloc(personas, (n + 1) * sizeof(persona)); //las lineas 1 y 2 son equivalentes a esta linea, pero es una mala practica
-
+        *sedes = temp_s;
+        *planes = temp_p;
 
         char *rut_str;
         char *nombre_str;
@@ -100,10 +113,13 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
         
 
 
-        int validador_rut, validador_fechas; 
+        int validador_rut, validador_fechas, validador_sedes; 
 
         validador_rut = validar_rut(temp, n, rut_str);
         validador_fechas = validar_orden_fechas(desde_str, hasta_str);
+        printf("Al menos llego hasta aca");
+        validador_sedes = validar_sede(*sedes, s, cod_sede_str);
+
 
         if (validador_fechas == 0){ // las fechas estan al reves
             // intercambiar fechas
@@ -117,9 +133,24 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
             // Realizar correccion del formato de fechas
 			// printf("\n\nfecha_antes: %s, fecha_despues %s\n", desde_str, hasta_str);
             reformatear_fechas(&desde_str, &hasta_str);
-			// printf("\n\nfecha_antes: %s, fecha_despues %s\n", desde_str, hasta_str);
-					
+			// printf("\n\nfecha_antes: %s, fecha_despues %s\n", desde_str, hasta_str);		
         }
+
+        // validar si se debe agregar la sede
+        if (validador_sedes == 0){ // agregar sede
+            printf("Agregar sede");
+            sede sede_temp = {
+                .cod_sede = strdup(cod_plan_str),
+                .ubicacion_sede = strdup(ubicacion_sede_str),
+                .n_clientes_sede = 1
+            };
+            temp_s[s] = sede_temp;
+            s += 1;
+
+        } else if (validador_sedes == 1) { // sede existente agregar cliente
+            printf("Agregar cliente en sede");
+        }
+
         //validar si se puede agregar la persona al arreglo
 		if (validador_rut == 1 && validador_fechas != -1){
             // Guardar los datos en la nueva persona (no modificable)
@@ -141,6 +172,8 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
     fclose(fp);
 
     *num_personas = n;
+    *num_sedes = s;
+    *num_planes = p;
     return personas;
 }
 
