@@ -1,6 +1,18 @@
 #include "funciones.h"
 #include "validadores.h"
 
+
+void imprimir_planes(plan *planes, int num_planes ){
+    if (planes != NULL){
+        printf("Mostrando planes disponibles: \n\n");
+        for (int i = 0; i < num_planes; i++){
+            printf("Código del plan: %s\n", planes[i].cod_plan);
+            printf("Descripción del plan: %s\n", planes[i].descripcion_plan);
+            printf("Clientes con el plan: %d\n\n", planes[i].n_clientes_plan);
+        }
+    }
+}
+
 persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, int *num_sedes, plan **planes, sede **sedes) {
     FILE *fp = fopen(nombre_archivo, "r");
     if (fp == NULL) {
@@ -103,12 +115,9 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
             // Incrementar el contador de campos
             campo++;
         }
-
-        // Agregar for que recorra las sedes y vea si la sede_str ya existe, si no existe, lo agrego
         
-
-
         int validador_rut, validador_fechas, validador_sedes; 
+        int validador_plan = 0;
 
         validador_rut = validar_rut(temp, n, rut_str);
         validador_fechas = validar_orden_fechas(desde_str, hasta_str);
@@ -132,7 +141,7 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
         //validar si se puede agregar la persona al arreglo
 		if (validador_rut == 1 && validador_fechas != -1 && validador_sedes != -1){
             // Guardar los datos en la nueva persona (no modificable)
-        	persona p = {
+        	persona p_temp = {
             	.rut = (rut_str != NULL && strlen(rut_str) != 0) ? strdup(rut_str) : "0000000-0",
             	.nombre_completo = (nombre_str != NULL && strlen(nombre_str) != 0) ? strdup(nombre_str) : "SinNombre SinApellido",
             	.edad = (edad_str != NULL && strlen(edad_str) != 0) ? atoi(edad_str) : 0,
@@ -143,7 +152,7 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
             	.cod_sede = (cod_sede_str != NULL && strlen(cod_sede_str) != 0) ? strdup(cod_sede_str) : NULL,
             	.ubicacion_sede = (ubicacion_sede_str != NULL && strlen(ubicacion_sede_str) != 0) ? strdup(ubicacion_sede_str) : NULL,
         	};
-        	personas[n++] = p;
+        	personas[n++] = p_temp;
         
             if (validador_sedes == 0){ // agregar sede
                 sede sede_temp = {
@@ -157,6 +166,20 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
 
             } else if (validador_sedes == 1) { // sede existente agregar cliente
                 aumentar_clientes_sede(temp_s, s, cod_sede_str); // aumentar cantidad de clientes en la sede
+            }
+
+            if (validador_plan == 0){ //agregar plan
+                plan plan_temp = {
+                    .cod_plan = strdup(cod_plan_str),
+                    .descripcion_plan = strdup(descripcion_plan_str),
+                    .n_clientes_plan = 1
+                };
+
+                temp_p[p] = plan_temp;
+                p += 1;
+
+            } else if (validador_plan == 1) { //plan existente agregar cliente
+                // aumentar_clientes_sede(temp_s, s, cod_sede_str); // aumentar cantidad de clientes en el plan
             }
 		}
     }

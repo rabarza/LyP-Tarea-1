@@ -34,4 +34,7 @@ void agregar_persona(persona *personas, int *num_personas);
 void eliminar_persona(persona *personas, int *num_personas);
 void buscar_persona(persona *personas, int num_personas);
 
+// PLANES
+void imprimir_planes(plan *planes, int num_planes );
+
 #endif
