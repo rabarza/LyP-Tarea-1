@@ -155,10 +155,14 @@ void reformatear_fechas(char **fecha_antes, char **fecha_despues){
 int validar_sede(sede *sedes, int num_sedes, char *cod_sede){
     if (*cod_sede != '\0'){
         for (int i = 0; i < num_sedes; i++){
-            if(strcmp( sedes[i].cod_sede, cod_sede) == 0) {
+            printf("Sedes: %s %s \t", cod_sede, sedes[i].cod_sede);
+            if(strcmp(cod_sede, sedes[i].cod_sede) == 0) {
+                printf("La sede ya existe\n");
                 return 1; // la sede ya existe
             }
         }
+        printf("\n");
+        printf("La sede no existe hasta ahora, AGREGAR_SEDE %s\n", cod_sede);
         return 0; // la sede no existe
     } else{
         return -1; // sede inválida

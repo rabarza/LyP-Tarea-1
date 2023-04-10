@@ -10,7 +10,6 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
     }
     //Inicializo la estructura a un puntero NULL para luego hacer realloc de memoria
     persona *personas = NULL; //equivalente a persona *personas;
-
     *sedes = NULL; // para poder hacer realloc al menos tiene que ser NULL
     *planes = NULL;
 
@@ -19,21 +18,18 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
     int n = 0; // numero temporal de personas
     int s = 0; // numero temporal de sedes
     int p = 0; // numero temporal de planes
-    printf("\nEntrar a leer archivo\n");
+    // printf("\nEntrar a leer archivo\n");
     
     
     fgets(linea, MAX_LEN, fp); // Leer la primera línea, que tiene los nombres de las columnas 
-    while (fgets(linea, MAX_LEN, fp)) { // Leer el resto de las líneas. Nota: fgets agrega un salto de linea \n al final de lo leído
+    while (fgets(linea, MAX_LEN, fp)) { // Leer el resto de las líneas. Nota: fgets agrega un salto de linea '\n' al final de lo leído
 
-        // 1- Asignar memoria para una nueva persona
-        persona *temp = realloc(personas, (n + 1) * sizeof(persona)); // temp apuntará al nuevo bloque de memoria que contiene el arreglo de estructuras persona con n+1 elementos.
-        printf("Antes del error\n");
+        // Asignar memoria para una nueva persona, nueva sede y nuevo plan
+        persona *temp = realloc(personas, (n + 1) * sizeof(persona)); // temp apuntará al nuevo bloque de memoria que contiene el arreglo de estructuras de tipo persona con (n+1) elementos.
+        sede *temp_s = realloc(*sedes, (s + 1) * sizeof(sede)); // temp_s apuntará al nuevo bloque de memoria que contiene el arreglo de estructuras sede con (s + 1) elementos.
+        plan *temp_p = realloc(*planes, (p + 1) * sizeof(plan)); // temp_p apuntará al nuevo bloque de memoria que contiene el arreglo de estructuras de tipo plan con (p + 1) elementos (planes).
 
-        sede *temp_s = realloc(*sedes, (s + 1) * sizeof(sede));
-        plan *temp_p = realloc(*planes, (p + 1) * sizeof(plan));
-        printf("Despues del error\n");
-
-        if (temp == NULL) {
+        if (temp == NULL || temp_s == NULL || temp_p == NULL) {
             printf("Error al asignar memoria.\n");
             fclose(fp);
             return NULL;
@@ -117,9 +113,9 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
 
         validador_rut = validar_rut(temp, n, rut_str);
         validador_fechas = validar_orden_fechas(desde_str, hasta_str);
-        printf("Al menos llego hasta aca");
-        validador_sedes = validar_sede(*sedes, s, cod_sede_str);
-
+        validador_sedes = validar_sede(temp_s, s, strdup(cod_sede_str));
+        // printf("Al menos llego hasta aca");
+        printf("\n\nValidador sedes: %d\n", validador_sedes);
 
         if (validador_fechas == 0){ // las fechas estan al reves
             // intercambiar fechas
@@ -138,12 +134,13 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
 
         // validar si se debe agregar la sede
         if (validador_sedes == 0){ // agregar sede
-            printf("Agregar sede");
+            printf("Agregar sede\n");
             sede sede_temp = {
-                .cod_sede = strdup(cod_plan_str),
+                .cod_sede = strdup(cod_sede_str),
                 .ubicacion_sede = strdup(ubicacion_sede_str),
                 .n_clientes_sede = 1
             };
+            
             temp_s[s] = sede_temp;
             s += 1;
 
