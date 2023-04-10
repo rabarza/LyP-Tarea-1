@@ -1,6 +1,6 @@
 #include "funciones.h"
 #include "validadores.h"
-
+#include "sedes.h"
 int main() {
 
     int num_personas;
@@ -15,8 +15,11 @@ int main() {
     // imprimir_personas(personas, num_personas); // mostrar todas los personas
 	printf("\nEl numero de personas es: %d\n", num_personas);
     
-    imprimir_sedes(sedes, num_sedes);
-    
+    agregar_sede(sedes, &num_sedes); // agregar una sede al arreglo notar que se modifica num_sedes
+    imprimir_sedes(sedes, num_sedes); // mostrar todas las sedes
+    eliminar_sede(sedes, &num_sedes);
+    imprimir_sedes(sedes, num_sedes); // mostrar todas las sedes
+
     // buscar_persona(personas, num_personas); // buscar una persona por rut
     // agregar_persona(personas, &num_personas); //agregar persona, notar que modifica num_personas
     // imprimir_personas(personas, num_personas); // mostrar todas los personas

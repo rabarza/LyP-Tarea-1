@@ -1,24 +1,6 @@
 #include "funciones.h"
 #include "validadores.h"
 
-void imprimir_sedes(sede *sedes, int num_sedes) {
-    printf("Numero de sedes: %d\n", num_sedes);
-    for (int i = 0; i < num_sedes; i++) {
-            printf("Código sede: %s\n", sedes[i].cod_sede);
-            printf("Ubicación sede: %s\n", sedes[i].ubicacion_sede);
-            printf("Personas en sede: %d\n\n", sedes[i].n_clientes_sede);
-    }
-}
-
-void aumentar_clientes_sede(sede *sedes, int num_sedes, char *cod_sede) {
-    for (int i = 0; i < num_sedes; i++){
-        if(strcmp(cod_sede, sedes[i].cod_sede) == 0) {
-            sedes[i].n_clientes_sede += 1; // aumentar cantidad de personas en sede
-            return;
-        }
-    }
-}
-
 persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, int *num_sedes, plan **planes, sede **sedes) {
     FILE *fp = fopen(nombre_archivo, "r");
     if (fp == NULL) {
@@ -303,7 +285,6 @@ void agregar_persona(persona *personas, int *num_personas){
         personas[i] = nueva_persona; // insertar la nueva persona en el arreglo en la posicion i
         *num_personas += 1;
     }
-    
 }
 
 void eliminar_persona(persona *personas, int *num_personas){
@@ -333,7 +314,7 @@ void eliminar_persona(persona *personas, int *num_personas){
     for (i = 0; i < *num_personas; i++){
         rut_2 = personas[i].rut; // Obtener puntero a la 1era letra del apellido de la persona j+1
 
-        // Búsqueda de la posicion donde agregar a la persona
+        // Búsqueda de la posicion donde eliminar a la persona
         if(strcmp(rut_1, rut_2) == 0){
             break; // el for se rompe cuando encuentro la posicion y obtengo el i (indice de la persona a eliminar)
         }
