@@ -23,11 +23,9 @@ int main() {
 
     // FUNCIONES PLANES
     // agregar_plan(planes, &num_planes); //agregar un plan al arreglo
-    imprimir_planes(planes , num_planes); //mostrar todos los planes
-    agregar_plan(planes, &num_planes); //agregar un plan al arreglo
-    imprimir_planes(planes , num_planes); //mostrar todos los planes
-    eliminar_plan(planes, &num_planes); // eliminar un plan
-    imprimir_planes(planes , num_planes); //mostrar todos los planes
+    // imprimir_planes(planes , num_planes); //mostrar todos los planes
+    // eliminar_plan(planes, &num_planes); // eliminar un plan
+    // imprimir_planes(planes , num_planes); //mostrar todos los planes
 
     // buscar_persona(personas, num_personas); // buscar una persona por rut
     // agregar_persona(personas, &num_personas); //agregar persona, notar que modifica num_personas

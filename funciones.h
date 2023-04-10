@@ -3,7 +3,7 @@
 
 #include "tiempo.h"
 #include "sedes.h"
-
+#include "planes.h"
 
 #define MAX_LEN 200
 
@@ -19,12 +19,6 @@ typedef struct {
     char *ubicacion_sede;
 } persona;
 
-typedef struct {
-    char *cod_plan;
-    char *descripcion_plan;
-    int n_clientes_plan;
-} plan;
-
 // Declaracion funciones
 persona escanear_datos();
 persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, int *num_sedes, plan **planes, sede **sedes); // modificacion planes
@@ -34,10 +28,4 @@ void agregar_persona(persona *personas, int *num_personas);
 void eliminar_persona(persona *personas, int *num_personas);
 void buscar_persona(persona *personas, int num_personas);
 
-// PLANES
-void imprimir_planes(plan *planes, int num_planes );
-void agregar_plan(plan *planes, int *num_planes);
-plan escanear_datos_plan();
-void aumentar_clientes_plan(plan *planes, int num_planes, char *cod_plan);
-void eliminar_plan(plan *planes, int *num_planes);
 #endif
