@@ -36,5 +36,8 @@ void buscar_persona(persona *personas, int num_personas);
 
 // PLANES
 void imprimir_planes(plan *planes, int num_planes );
-
+void agregar_plan(plan *planes, int *num_planes);
+plan escanear_datos_plan();
+void aumentar_clientes_plan(plan *planes, int num_planes, char *cod_plan);
+void eliminar_plan(plan *planes, int *num_planes);
 #endif

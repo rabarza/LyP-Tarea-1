@@ -29,6 +29,22 @@ int validar_rut(persona *personas, int num_personas, char* rut){
     }
 }
 
+int validar_plan(plan *planes, int num_planes, char *cod_plan, char *descripcion_plan_str){
+    if (*cod_plan != '\0'){
+        for (int i = 0; i < num_planes; i++){
+            if(strcmp(cod_plan, planes[i].cod_plan) == 0) {
+                if (*planes[i].descripcion_plan == '\0' && *descripcion_plan_str != '\0'){ // si la sede existe y falta información de la ubicación (=> llenar información faltante)
+                    planes[i].descripcion_plan = strdup(descripcion_plan_str); // llenar la información faltante
+                }
+                return 1; // el plan ya existe
+            }
+        }
+        return 0; // el plan no existe
+    } else{
+        return -1; // plan inválido
+    }
+}
+
 int validar_sede(sede *sedes, int num_sedes, char *cod_sede, char *ubicacion_sede_str){
     if (*cod_sede != '\0'){
         for (int i = 0; i < num_sedes; i++){
@@ -44,6 +60,7 @@ int validar_sede(sede *sedes, int num_sedes, char *cod_sede, char *ubicacion_sed
         return -1; // sede inválida
     }
 }
+
 
 int validar_orden_fechas(char *fecha_antes, char *fecha_despues) {
 	/* 

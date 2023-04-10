@@ -54,10 +54,6 @@ void agregar_sede(sede *sedes, int *num_sedes){
      - *num_sedes: puntero a variable de tipo entero que indica el numero de estructuras de sedes en el arreglo
     */
     sede nueva_sede = escanear_datos_sede();
-
-    //Lectura de datos
-    char *cod_sede_str;
-    char *ubicacion_sede_str;
     // validar si se puede agregar al arreglo de estructuras
     int validador_sede; 
     validador_sede = validar_sede(sedes, *num_sedes, nueva_sede.cod_sede, '\0');
@@ -100,22 +96,22 @@ void eliminar_sede(sede *sedes, int *num_sedes){
 
     int i;
     for (i = 0; i < *num_sedes; i++){
-        cod_2 = sedes[i].cod_sede; // Obtener puntero a la 1era letra del apellido de la persona j+1
+        cod_2 = sedes[i].cod_sede;
 
         // Búsqueda de la posicion donde eliminar a la sede
         if(strcmp(cod_sede_eliminar, cod_2) == 0){
-            break; // el for se rompe cuando encuentro la posicion y obtengo el i (indice de la persona a eliminar)
+            break; // el for se rompe cuando encuentro la posicion y obtengo el i (indice de la sede a eliminar)
         }
     }
     
-    // Mover una posicion a la izquierda a las personas iban a la derecha de la persona i (la que se elimina)
+    // Mover una posicion a la izquierda a las sedes que iban a la derecha de la persona i (la que se elimina)
     int j;
     if (sedes[i].n_clientes_sede == 0){ // si la sede tiene 0 clientes se puede borrar
         for (j = i; j < *num_sedes; j++){
             sedes[j] = sedes[j+1];
         } 
-        *num_sedes -= 1; // la cantidad de personas disminuye una unidad
-            // Reasigno espacio memoria luego de eliminar a la sede (disminuye de acuerdo al nuevo *num_sedes). Si no se elimina la sede, todo queda igual
+        *num_sedes -= 1; // la cantidad de sedes disminuye una unidad
+        // Reasigno espacio memoria luego de eliminar a la sede (disminuye de acuerdo al nuevo *num_sedes). Si no se elimina la sede, todo queda igual
 
         sede *temp = realloc(sedes, (*num_sedes) * sizeof(sede));
 
@@ -123,7 +119,7 @@ void eliminar_sede(sede *sedes, int *num_sedes){
             printf("Error de reasignación de memoria: funcion (eliminar_persona)\n");
             return;
         } else{
-            sedes = temp; //el puntero del arreglo de personas ahora apunta a la direccion de memoria de temp
+            sedes = temp; //el puntero del arreglo de sedes ahora apunta a la direccion de memoria de temp
             printf("\nEliminacion exitosa: la sede ya no pertenece a la base de datos\n");
         }
 
