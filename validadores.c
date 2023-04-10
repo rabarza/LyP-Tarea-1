@@ -29,6 +29,22 @@ int validar_rut(persona *personas, int num_personas, char* rut){
     }
 }
 
+int validar_sede(sede *sedes, int num_sedes, char *cod_sede, char *ubicacion_sede_str){
+    if (*cod_sede != '\0'){
+        for (int i = 0; i < num_sedes; i++){
+            if(strcmp(cod_sede, sedes[i].cod_sede) == 0) {
+                if (*sedes[i].ubicacion_sede == '\0' && *ubicacion_sede_str != '\0'){
+                    sedes[i].ubicacion_sede = strdup(ubicacion_sede_str); // llenar la información faltante
+                }
+                return 1; // la sede ya existe
+            }
+        }
+        return 0; // la sede no existe
+    } else{
+        return -1; // sede inválida
+    }
+}
+
 int validar_orden_fechas(char *fecha_antes, char *fecha_despues) {
 	/* 
 	* Funcion que valida el orden de las fechas como creciente, decreciente o invalido. El formato de las fechas es "AAAA/MM/DD"
@@ -148,22 +164,5 @@ void reformatear_fechas(char **fecha_antes, char **fecha_despues){
 	
         timestruct_to_string(*fecha_antes, &tiempo); // llevar la estructura de tiempo al string que falta (*fecha_antes)
         // printf("Fecha antes (modificada): %s\n", *fecha_antes);	
-    }
-}
-
-
-int validar_sede(sede *sedes, int num_sedes, char *cod_sede){
-    if (*cod_sede != '\0'){
-        for (int i = 0; i < num_sedes; i++){
-            printf("Sedes: %s %s \t", cod_sede, sedes[i].cod_sede);
-            if(strcmp(cod_sede, sedes[i].cod_sede) == 0) {
-                // sedes[i].n_clientes_sede += 1; // aumentar cantidad de personas en sede
-                return 1; // la sede ya existe
-            }
-        }
-        printf("\n");
-        return 0; // la sede no existe
-    } else{
-        return -1; // sede inválida
     }
 }

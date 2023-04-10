@@ -40,4 +40,7 @@ void agregar_persona(persona *personas, int *num_personas);
 void eliminar_persona(persona *personas, int *num_personas);
 void buscar_persona(persona *personas, int num_personas);
 
+//Sedes
+void imprimir_sedes(sede *sedes, int num_sedes);
+
 #endif
