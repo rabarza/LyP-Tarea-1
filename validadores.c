@@ -33,7 +33,7 @@ int validar_sede(sede *sedes, int num_sedes, char *cod_sede, char *ubicacion_sed
     if (*cod_sede != '\0'){
         for (int i = 0; i < num_sedes; i++){
             if(strcmp(cod_sede, sedes[i].cod_sede) == 0) {
-                if (*sedes[i].ubicacion_sede == '\0' && *ubicacion_sede_str != '\0'){
+                if (*sedes[i].ubicacion_sede == '\0' && *ubicacion_sede_str != '\0'){ // si la sede existe y falta información de la ubicación (=> llenar información faltante)
                     sedes[i].ubicacion_sede = strdup(ubicacion_sede_str); // llenar la información faltante
                 }
                 return 1; // la sede ya existe
