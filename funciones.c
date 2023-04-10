@@ -1,6 +1,13 @@
 #include "funciones.h"
 #include "validadores.h"
 
+void aumentar_clientes_sede(sede *sedes, int num_sedes, char *cod_sede) {
+    for (int i = 0; i < num_sedes; i++){
+        if(strcmp(cod_sede, sedes[i].cod_sede) == 0) {
+            sedes[i].n_clientes_sede += 1; // aumentar cantidad de personas en sede
+        }
+    }
+}
 
 persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, int *num_sedes, plan **planes, sede **sedes) {
     FILE *fp = fopen(nombre_archivo, "r");
@@ -113,9 +120,7 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
 
         validador_rut = validar_rut(temp, n, rut_str);
         validador_fechas = validar_orden_fechas(desde_str, hasta_str);
-        validador_sedes = validar_sede(temp_s, s, strdup(cod_sede_str));
-        // printf("Al menos llego hasta aca");
-        printf("\n\nValidador sedes: %d\n", validador_sedes);
+        validador_sedes = validar_sede(temp_s, s, cod_sede_str); // validar si se debe agregar la sede o aumentar la cantidad de personas en esta
 
         if (validador_fechas == 0){ // las fechas estan al reves
             // intercambiar fechas
@@ -132,24 +137,8 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
 			// printf("\n\nfecha_antes: %s, fecha_despues %s\n", desde_str, hasta_str);		
         }
 
-        // validar si se debe agregar la sede
-        if (validador_sedes == 0){ // agregar sede
-            printf("Agregar sede\n");
-            sede sede_temp = {
-                .cod_sede = strdup(cod_sede_str),
-                .ubicacion_sede = strdup(ubicacion_sede_str),
-                .n_clientes_sede = 1
-            };
-            
-            temp_s[s] = sede_temp;
-            s += 1;
-
-        } else if (validador_sedes == 1) { // sede existente agregar cliente
-            printf("Agregar cliente en sede");
-        }
-
         //validar si se puede agregar la persona al arreglo
-		if (validador_rut == 1 && validador_fechas != -1){
+		if (validador_rut == 1 && validador_fechas != -1 && validador_sedes != -1){
             // Guardar los datos en la nueva persona (no modificable)
         	persona p = {
             	.rut = (rut_str != NULL && strlen(rut_str) != 0) ? strdup(rut_str) : "0000000-0",
@@ -163,6 +152,21 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
             	.ubicacion_sede = (ubicacion_sede_str != NULL && strlen(ubicacion_sede_str) != 0) ? strdup(ubicacion_sede_str) : NULL,
         	};
         	personas[n++] = p;
+        
+            if (validador_sedes == 0){ // agregar sede
+                printf("Agregar sede\n");
+                sede sede_temp = {
+                    .cod_sede = strdup(cod_sede_str),
+                    .ubicacion_sede = strdup(ubicacion_sede_str),
+                    .n_clientes_sede = 1
+                };
+
+                temp_s[s] = sede_temp;
+                s += 1;
+
+            } else if (validador_sedes == 1) { // sede existente agregar cliente
+                aumentar_clientes_sede(temp_s, s, cod_sede_str); // aumentar cantidad de clientes en la sede
+            }
             
 		}
     }

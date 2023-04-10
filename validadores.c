@@ -157,12 +157,11 @@ int validar_sede(sede *sedes, int num_sedes, char *cod_sede){
         for (int i = 0; i < num_sedes; i++){
             printf("Sedes: %s %s \t", cod_sede, sedes[i].cod_sede);
             if(strcmp(cod_sede, sedes[i].cod_sede) == 0) {
-                printf("La sede ya existe\n");
+                // sedes[i].n_clientes_sede += 1; // aumentar cantidad de personas en sede
                 return 1; // la sede ya existe
             }
         }
         printf("\n");
-        printf("La sede no existe hasta ahora, AGREGAR_SEDE %s\n", cod_sede);
         return 0; // la sede no existe
     } else{
         return -1; // sede inválida
