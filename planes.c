@@ -60,8 +60,9 @@ void agregar_plan(plan *planes, int *num_planes){
 void imprimir_planes(plan *planes, int num_planes){
     if (planes != NULL){
         printf("Mostrando planes disponibles: \n\n");
+        printf("Número de planes disponibles: %d\n\n", num_planes);
         for (int i = 0; i < num_planes; i++){
-            printf("Plan: %d.\n", i + 1);
+            printf("Plan: %d\n", i + 1);
             printf("Código del plan: %s\n", planes[i].cod_plan);
             printf("Descripción del plan: %s\n", planes[i].descripcion_plan);
             printf("Clientes con el plan: %d\n\n", planes[i].n_clientes_plan);
@@ -72,7 +73,16 @@ void imprimir_planes(plan *planes, int num_planes){
 void aumentar_clientes_plan(plan *planes, int num_planes, char *cod_plan) {
     for (int i = 0; i < num_planes; i++){
         if(strcmp(cod_plan, planes[i].cod_plan) == 0) {
-            planes[i].n_clientes_plan += 1; // aumentar cantidad de personas en sede
+            planes[i].n_clientes_plan += 1; // aumentar cantidad de personas en plan
+            return;
+        }
+    }
+}
+
+void disminuir_clientes_plan(plan *planes, int num_planes, char *cod_plan) {
+    for (int i = 0; i < num_planes; i++){
+        if(strcmp(cod_plan, planes[i].cod_plan) == 0) {
+            planes[i].n_clientes_plan -= 1; // disminuir cantidad de personas en plan
             return;
         }
     }

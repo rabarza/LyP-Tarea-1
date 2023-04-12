@@ -44,10 +44,10 @@ int main() {
                 buscar_persona(personas, num_personas); // buscar una persona por rut
                 break;
             case 4:
-                agregar_persona(personas, sedes, planes, &num_personas, &num_sedes, &num_planes); // agregar una sede al arreglo notar que se modifica num_sedes
+                agregar_persona(personas, sedes, planes, &num_personas, &num_sedes, &num_planes); // agregar una sede al arreglo notar que se puede modificar personas, sedes, planes, num_personas, num_sedes, y num_planes 
                 break;
             case 5:
-                eliminar_persona(personas, &num_personas); // eliminar persona
+                eliminar_persona(personas, sedes, planes, &num_personas, &num_sedes, &num_planes); // eliminar persona
                 break;
             case 6:
                 // editar datos cliente

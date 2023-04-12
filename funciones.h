@@ -23,9 +23,9 @@ typedef struct {
 persona escanear_datos(sede* sedes, int num_sedes, plan *planes, int num_planes);
 persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, int *num_sedes, plan **planes, sede **sedes); // modificacion planes
 void agregar_persona(persona *personas, sede *sedes, plan *planes, int *num_personas, int *num_sedes, int *num_planes);
+void eliminar_persona(persona *personas, sede *sedes, plan *planes, int *num_personas, int *num_sedes, int *num_planes);
 void bubble_sort_por_apellido(persona *personas, int num_personas);
 void imprimir_personas(persona *personas, int num_personas);
-void eliminar_persona(persona *personas, int *num_personas);
 void buscar_persona(persona *personas, int num_personas);
 
 #endif

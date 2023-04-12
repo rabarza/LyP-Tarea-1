@@ -210,7 +210,6 @@ persona escanear_datos(sede* sedes, int num_sedes, plan *planes, int num_planes)
     plan_selector = atoi(linea);
 
     while(plan_selector != 0){
-        
         switch (plan_selector){
             case 1: // plan existente
                 int idx_plan_elect;
@@ -237,16 +236,6 @@ persona escanear_datos(sede* sedes, int num_sedes, plan *planes, int num_planes)
                 break;
         }
     }
-
-    // printf("Código del plan ");
-    // fgets(linea, MAX_LEN, stdin);
-    // linea[strcspn(linea, "\n")] = '\0';
-    // nueva_persona.cod_plan = strdup(linea);
-
-    // printf("Descripción plan");
-    // fgets(linea, MAX_LEN, stdin);
-    // linea[strcspn(linea, "\n")] = '\0';
-    // nueva_persona.descripcion_plan = strdup(linea);
 
     printf("Fecha de inicio (AAAA/MM/DD): ");
     fgets(linea, MAX_LEN, stdin);
@@ -283,8 +272,8 @@ persona escanear_datos(sede* sedes, int num_sedes, plan *planes, int num_planes)
             case 2: // nuevo plan
                 // leer datos
                 sede nueva_sede = escanear_datos_sede();
-                nueva_persona.cod_plan = nueva_sede.cod_sede;
-                nueva_persona.descripcion_plan = nueva_sede.ubicacion_sede;
+                nueva_persona.cod_sede = nueva_sede.cod_sede;
+                nueva_persona.ubicacion_sede = nueva_sede.ubicacion_sede;
                 nueva_sede.n_clientes_sede = 1;
                 sede_selector = 0;
                 break;
@@ -292,16 +281,6 @@ persona escanear_datos(sede* sedes, int num_sedes, plan *planes, int num_planes)
                 break;
         }
     }
-
-    // printf("Codigo de sede: ");
-    // fgets(linea, MAX_LEN, stdin);
-    // linea[strcspn(linea, "\n")] = '\0';
-    // nueva_persona.cod_sede = strdup(linea);
-    
-    // printf("Ubicacion de sede: ");
-    // fgets(linea, MAX_LEN, stdin);
-    // linea[strcspn(linea, "\n")] = '\0';
-    // nueva_persona.ubicacion_sede = strdup(linea);
 
    return nueva_persona;
 }
@@ -404,7 +383,7 @@ void agregar_persona(persona *personas, sede *sedes, plan *planes, int *num_pers
     }
 }
 
-void eliminar_persona(persona *personas, int *num_personas){
+void eliminar_persona(persona *personas, sede *sedes, plan *planes, int *num_personas, int *num_sedes, int *num_planes){
     
     char *rut_eliminar;
     char linea[MAX_LEN];
@@ -433,9 +412,12 @@ void eliminar_persona(persona *personas, int *num_personas){
 
         // Búsqueda de la posicion donde eliminar a la persona
         if(strcmp(rut_1, rut_2) == 0){
+            disminuir_clientes_sede(sedes, *num_sedes, personas[i].cod_sede); // quitar a la persona de la sede
+            disminuir_clientes_plan(planes, *num_planes, personas[i].cod_plan); // quitar a la persona del plan
             break; // el for se rompe cuando encuentro la posicion y obtengo el i (indice de la persona a eliminar)
         }
     }
+
     
     // Mover una posicion a la izquierda a las personas iban a la derecha de la persona i (la que se elimina)
     int j;
@@ -443,7 +425,7 @@ void eliminar_persona(persona *personas, int *num_personas){
         personas[j] = personas[j+1];
     } 
 
-    *num_personas -=1; // la cantidad de personas disminuye una unidad
+    *num_personas -= 1; // la cantidad de personas disminuye una unidad
     
     // Reasigno espacio memoria luego de eliminar a la persona (disminuye de acuerdo al nuevo *num_personas)
     persona *temp = realloc(personas, (*num_personas) * sizeof(persona));

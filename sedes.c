@@ -2,11 +2,15 @@
 #include "validadores.h"
 
 void imprimir_sedes(sede *sedes, int num_sedes) {
-    printf("Numero de sedes: %d\n", num_sedes);
-    for (int i = 0; i < num_sedes; i++) {
-        printf("Código sede: %s\n", sedes[i].cod_sede);
-        printf("Ubicación sede: %s\n", sedes[i].ubicacion_sede);
-        printf("Personas en sede: %d\n\n", sedes[i].n_clientes_sede);
+    if (sedes != NULL){
+        printf("Mostrando sedes disponibles: \n\n");
+        printf("Número de sedes disponibles: %d\n\n", num_sedes);
+        for (int i = 0; i < num_sedes; i++) {
+            printf("Sede: %d\n", i + 1);
+            printf("Código sede: %s\n", sedes[i].cod_sede);
+            printf("Ubicación sede: %s\n", sedes[i].ubicacion_sede);
+            printf("Personas en sede: %d\n\n", sedes[i].n_clientes_sede);
+        }
     }
 }
 
@@ -22,7 +26,7 @@ void aumentar_clientes_sede(sede *sedes, int num_sedes, char *cod_sede) {
 void disminuir_clientes_sede(sede *sedes, int num_sedes, char *cod_sede) {
     for (int i = 0; i < num_sedes; i++){
         if(strcmp(cod_sede, sedes[i].cod_sede) == 0) {
-            sedes[i].n_clientes_sede -= 1; // aumentar cantidad de personas en sede
+            sedes[i].n_clientes_sede -= 1; // disminuir cantidad de personas en sede
             return;
         }
     }
