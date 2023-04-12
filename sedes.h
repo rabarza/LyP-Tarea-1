@@ -12,6 +12,7 @@ typedef struct {
 // Funciones
 void imprimir_sedes(sede *sedes, int num_sedes);
 void aumentar_clientes_sede(sede *sedes, int num_sedes, char *cod_sede);
+void disminuir_clientes_sede(sede *sedes, int num_sedes, char *cod_sede);
 void agregar_sede(sede *sedes, int *num_sedes);
 void eliminar_sede(sede *sedes, int *num_sedes);
 #endif

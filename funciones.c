@@ -149,8 +149,8 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
                     .n_clientes_sede = 1
                 };
 
-                temp_s[s] = sede_temp;
-                s += 1;
+                temp_s[s++] = sede_temp;
+                // s += 1;
 
             } else if (validador_sedes == 1) { // sede existente agregar cliente
                 aumentar_clientes_sede(temp_s, s, cod_sede_str); // aumentar cantidad de clientes en la sede
@@ -163,8 +163,8 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
                     .n_clientes_plan = 1
                 };
 
-                temp_p[p] = plan_temp;
-                p += 1;
+                temp_p[p++] = plan_temp;
+                // p += 1;
             } else if (validador_plan == 1) { //plan existente agregar cliente
                 aumentar_clientes_plan(temp_p, p, cod_plan_str); // aumentar cantidad de clientes en el plan
             }
@@ -179,9 +179,10 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
 }
 
 
-persona escanear_datos(){ 
+persona escanear_datos(sede* sedes, int num_sedes, plan *planes, int num_planes){ 
     persona nueva_persona;
     char linea[MAX_LEN];
+    int plan_selector;
 
     //Lectura de datos
     printf("Ingrese los siguientes datos solicitados por consola\n\n");
@@ -201,12 +202,49 @@ persona escanear_datos(){
     linea[strcspn(linea, "\n")] = '\0';
     nueva_persona.edad = atoi(linea);
 
-    printf("Codigo del plan: ");
+    // printf("Seleccionar plan: \n");
+    // printf("1. Seleccionar plan existente: \n");
+    // printf("2. Seleccionar plan nuevo: \n");
+    // fgets(linea, MAX_LEN, stdin);
+    // linea[strcspn(linea, "\n")] = '\0';
+    // plan_selector = atoi(linea);
+
+    // while(plan_selector != 0){
+        
+    //     switch (plan_selector){
+    //     case 1:
+    //         int idx_plan_elect;
+    //         // Mostrar planes y leer opción ingresada
+    //         imprimir_planes(planes, num_planes);
+    //         printf("Ingresar numero del plan a elegir: \n");
+    //         linea[strcspn(linea, "\n")] = '\0';
+    //         getchar();
+    //         idx_plan_elect = atoi(linea);
+
+    //         nueva_persona.cod_plan = planes[idx_plan_elect].cod_plan;
+    //         nueva_persona.descripcion_plan = planes[idx_plan_elect].descripcion_plan;
+    //         plan_selector = 0;
+    //         break;
+    //     case 2:
+    //         // leer datos
+    //         plan nuevo_plan = escanear_datos_plan();
+    //         nueva_persona.cod_plan = nuevo_plan.cod_plan;
+    //         nueva_persona.descripcion_plan = nuevo_plan.descripcion_plan;
+    //         nuevo_plan.n_clientes_plan = 1;
+    //         plan_selector = 0;
+    //         break;
+    //     default:
+    //         break;
+    //     }
+    // }
+    // getchar();
+
+    printf("Código del plan ");
     fgets(linea, MAX_LEN, stdin);
     linea[strcspn(linea, "\n")] = '\0';
     nueva_persona.cod_plan = strdup(linea);
-    
-    printf("Descripcion del plan: ");
+
+    printf("Descripción plan");
     fgets(linea, MAX_LEN, stdin);
     linea[strcspn(linea, "\n")] = '\0';
     nueva_persona.descripcion_plan = strdup(linea);
@@ -234,7 +272,7 @@ persona escanear_datos(){
    return nueva_persona;
 }
 
-void agregar_persona(persona *personas, int *num_personas){
+void agregar_persona(persona *personas, sede *sedes, plan *planes, int *num_personas, int *num_sedes, int *num_planes){
     /* 
     * Funcion agrega personas al arreglo de estructuras de tipo persona.
     Realiza la asignacion en una ubicacion tal que el arreglo se mantiene ordenado alfabeticamente segun el apellido.
@@ -244,45 +282,39 @@ void agregar_persona(persona *personas, int *num_personas){
      - *num_personas: puntero a variable de tipo entero que indica el numero de estructuras de personas en el arreglo
     */
     int i;
-    // Reasigno espacio memoria para agregar una nueva persona
-    persona *temp = realloc(personas, (*num_personas + 1) * sizeof(persona));
-    if (temp == NULL){
-        printf("Error de reasignacion de memoria: funcion (agregar_persona)");
-        return;
-    }
-    //Lectura de datos
-    char *rut_str;
-    char *nombre_str;
-    char *edad_str;
-    char *cod_plan_str;
-    char *descripcion_plan_str;
-    char *desde_str;
-    char *hasta_str;
-    char *cod_sede_str;
-    char *ubicacion_sede_str;
 
-    persona nueva_persona = escanear_datos();
+    persona nueva_persona = escanear_datos(sedes, *num_sedes,  planes, *num_planes);
 
     // validar si se puede agregar al arreglo de estructuras
-    int validador_rut, validador_fechas; 
-    validador_rut = validar_rut(temp, *num_personas, nueva_persona.rut);
-							
+    int validador_rut, validador_fechas, validador_sede, validador_plan; 
+    validador_rut = validar_rut(personas, *num_personas, nueva_persona.rut);
     validador_fechas = validar_orden_fechas(nueva_persona.desde, nueva_persona.hasta);
+    validador_sede = validar_sede(sedes, *num_sedes, nueva_persona.cod_sede, nueva_persona.ubicacion_sede); // validar si se debe agregar la sede o aumentar la cantidad de personas en esta
+    validador_plan = validar_plan(planes, *num_planes, nueva_persona.cod_plan, nueva_persona.descripcion_plan); // validar si se debe agregar el plan o aumentar la cantidad de personas suscritas en el
 
-    if (validador_fechas == 0){
-        // intercambiar fechas
-        intercambiar_fechas(&(nueva_persona.desde), &(nueva_persona.hasta));
+    // CORREGIR ORDEN Y FORMATOS DE FECHA
+    if (validador_fechas == 0) {
+        intercambiar_fechas(&(nueva_persona.desde), &(nueva_persona.hasta)); // intercambiar fechas
+    } else if (validador_fechas == 2 || validador_fechas == 3) { // falta una de las fechas -> AGREGAR LA FECHA FALTANTE +- 3 MESES
+        reformatear_fechas(&(nueva_persona.desde), &(nueva_persona.hasta));
     }
 
-    if(validador_rut == 1 && validador_fechas != -1){
+    if (validador_rut == 1 && validador_fechas != -1 && validador_sede != -1 && validador_plan != -1) {
+        // Reasigno espacio memoria para agregar una nueva persona
+        persona *temp = realloc(personas, (*num_personas + 1) * sizeof(persona));
+        if (temp == NULL) {
+            printf("Error de reasignacion de memoria: funcion (agregar_persona)");
+            return;
+        }
+
         char *apellido_1, *apellido_2;
 
-        for (i = 0; i < *num_personas; i++){
+        for (i = 0; i < *num_personas; i++) {
             apellido_1 = strrchr(nueva_persona.nombre_completo, ' ') + 1; // Obtener posicion 1era letra del apellido de la persona j.  Retorna un puntero al primer carácter encontrado en la cadena o un puntero nulo si el carácter no se encuentra.
             apellido_2 = strrchr(temp[i].nombre_completo, ' ') + 1; // Obtener puntero a la 1era letra del apellido de la persona j+1
 
             // Búsqueda de la posicion donde agregar a la persona
-            if(strcmp(apellido_1, apellido_2) < 0){
+            if (strcmp(apellido_1, apellido_2) < 0) {
                 break; // el for se rompe cuando encuentro la posicion y obtengo el i
             }
         }
@@ -294,6 +326,47 @@ void agregar_persona(persona *personas, int *num_personas){
         personas = temp;
         personas[i] = nueva_persona; // insertar la nueva persona en el arreglo en la posicion i
         *num_personas += 1;
+        
+        if (validador_sede == 0) { // agregar sede
+            sede *temp_s = realloc(sedes, (*num_sedes + 1) * sizeof(sede)); // temp_s apuntará al nuevo bloque de memoria que contiene el arreglo de estructuras sede con (s + 1) elementos.
+            
+            // en mostrar clientes debo preguntar si agregar en sede existente o en nueva sede
+            sede sede_temp = {
+                .cod_sede = strdup(nueva_persona.cod_sede),
+                .ubicacion_sede = strdup(nueva_persona.ubicacion_sede),
+                .n_clientes_sede = 1
+            };
+            sedes = temp_s;
+            sedes[*num_sedes] = sede_temp;
+            *num_sedes += 1;
+
+        } else if (validador_sede == 1) { // sede existente agregar cliente
+            aumentar_clientes_sede(sedes, *num_sedes, nueva_persona.cod_sede); // aumentar cantidad de clientes en la sede
+        }
+
+        if (validador_plan == 0) { //agregar plan
+            plan *temp_p = realloc(planes, (*num_planes + 1) * sizeof(plan));
+            plan plan_temp = {
+                .cod_plan = strdup(nueva_persona.cod_plan),
+                .descripcion_plan = strdup(nueva_persona.descripcion_plan),
+                .n_clientes_plan = 1
+            };
+
+            planes = temp_p;
+            planes[*num_planes] = plan_temp;
+            *num_planes += 1;
+                // p += 1;
+        } else if (validador_plan == 1) { // plan existente agregar cliente
+            aumentar_clientes_plan(planes, *num_planes, nueva_persona.cod_plan); // aumentar cantidad de clientes en el plan
+        }
+    } else if (validador_rut == -1) {
+        printf("RUT INVÁLIDO\n");
+    } else if (validador_plan == -1) {
+        printf("CÓDIGO DE PLAN INVÁLIDO\n");
+    } else if (validador_sede == -1) {
+        printf("CÓDIGO DE SEDE INVÁLIDO\n");
+    } else {
+        printf("FORMATO DE FECHAS INVÁLIDO\n");
     }
 }
 

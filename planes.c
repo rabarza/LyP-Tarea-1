@@ -61,9 +61,10 @@ void imprimir_planes(plan *planes, int num_planes){
     if (planes != NULL){
         printf("Mostrando planes disponibles: \n\n");
         for (int i = 0; i < num_planes; i++){
-            printf("Código del plan: %s\n", planes[i].cod_plan);
-            printf("Descripción del plan: %s\n", planes[i].descripcion_plan);
-            printf("Clientes con el plan: %d\n\n", planes[i].n_clientes_plan);
+            printf("Indice del plan%d", i + 1);
+            printf("Código del plan %d: %s\n",i + 1, planes[i].cod_plan);
+            printf("Descripción del plan %d: %s\n",i + 1, planes[i].descripcion_plan);
+            printf("Clientes con el plan %d: %d\n\n",i + 1, planes[i].n_clientes_plan);
         }
     }
 }

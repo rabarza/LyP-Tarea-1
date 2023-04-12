@@ -12,7 +12,6 @@ int main() {
     sede *sedes; // puntero a la direccion de memoria de estructuras de tipo sede
     persona *personas = leer_archivo("BigMuscle.csv", &num_personas, &num_planes, &num_sedes, &planes, &sedes);
 
-	// printf("\nEl numero de personas es: %d\n", num_personas);
 
     int option = 0;
     while(option != 15) {
@@ -45,19 +44,21 @@ int main() {
                 buscar_persona(personas, num_personas); // buscar una persona por rut
                 break;
             case 4:
-                agregar_persona(personas, &num_personas); // agregar una sede al arreglo notar que se modifica num_sedes
+                agregar_persona(personas, sedes, planes, &num_personas, &num_sedes, &num_planes); // agregar una sede al arreglo notar que se modifica num_sedes
                 break;
             case 5:
                 eliminar_persona(personas, &num_personas); // eliminar persona
                 break;
             case 6:
                 // editar datos cliente
+                // buscar_persona() // buscar una persona por rut
+                // a esa persona le modificamos los datos
                 break;          
             case 7:
-                imprimir_planes(planes, num_planes); //agregar un plan al arreglo
+                imprimir_planes(planes, num_planes); // agregar un plan al arreglo
                 break;            
             case 8:
-                agregar_plan(planes, &num_planes); //agregar un plan al arreglo
+                agregar_plan(planes, &num_planes); // agregar un plan al arreglo
                 break;            
             case 9:
                 eliminar_plan(planes, &num_planes); // eliminar un plan

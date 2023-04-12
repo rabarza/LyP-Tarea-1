@@ -19,6 +19,15 @@ void aumentar_clientes_sede(sede *sedes, int num_sedes, char *cod_sede) {
     }
 }
 
+void disminuir_clientes_sede(sede *sedes, int num_sedes, char *cod_sede) {
+    for (int i = 0; i < num_sedes; i++){
+        if(strcmp(cod_sede, sedes[i].cod_sede) == 0) {
+            sedes[i].n_clientes_sede -= 1; // aumentar cantidad de personas en sede
+            return;
+        }
+    }
+}
+
 sede escanear_datos_sede(){
     /*
     Función que entrega una sede a partir de los datos escaneados
