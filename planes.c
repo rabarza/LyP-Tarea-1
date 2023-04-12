@@ -70,6 +70,14 @@ void imprimir_planes(plan *planes, int num_planes){
     }
 }
 
+plan encontrar_plan(plan *planes, int num_planes, char *cod_plan) {
+    for (int i = 0; i < num_planes; i++){
+        if(strcmp(cod_plan, planes[i].cod_plan) == 0) {
+            return planes[i];
+        }
+    }
+}
+
 void aumentar_clientes_plan(plan *planes, int num_planes, char *cod_plan) {
     for (int i = 0; i < num_planes; i++){
         if(strcmp(cod_plan, planes[i].cod_plan) == 0) {

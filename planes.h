@@ -11,10 +11,13 @@ typedef struct {
 
 
 // PLANES
-void imprimir_planes(plan *planes, int num_planes );
+void imprimir_planes(plan *planes, int num_planes);
 void agregar_plan(plan *planes, int *num_planes);
-plan escanear_datos_plan();
+void eliminar_plan(plan *planes, int *num_planes);
+
 void aumentar_clientes_plan(plan *planes, int num_planes, char *cod_plan);
 void disminuir_clientes_plan(plan *planes, int num_planes, char *cod_plan);
-void eliminar_plan(plan *planes, int *num_planes);
+
+plan encontrar_plan(plan *planes, int num_planes, char *cod_plan);
+plan escanear_datos_plan();
 #endif

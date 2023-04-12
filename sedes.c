@@ -14,6 +14,14 @@ void imprimir_sedes(sede *sedes, int num_sedes) {
     }
 }
 
+sede encontrar_sede(sede *sedes, int num_sedes, char *cod_sede) {
+    for (int i = 0; i < num_sedes; i++){
+        if(strcmp(cod_sede, sedes[i].cod_sede) == 0) {
+            return sedes[i]; // retornar la sede correspondiente
+        }
+    }
+}
+
 void aumentar_clientes_sede(sede *sedes, int num_sedes, char *cod_sede) {
     for (int i = 0; i < num_sedes; i++){
         if(strcmp(cod_sede, sedes[i].cod_sede) == 0) {

@@ -11,7 +11,7 @@ int main() {
     plan *planes; // puntero a la direccion de memoria de estructuras de tipo plan
     sede *sedes; // puntero a la direccion de memoria de estructuras de tipo sede
     persona *personas = leer_archivo("BigMuscle.csv", &num_personas, &num_planes, &num_sedes, &planes, &sedes);
-
+    datos_faltantes_personas(personas, sedes, planes, &num_personas, &num_sedes, &num_planes);
 
     int option = 0;
     while(option != 15) {

@@ -40,7 +40,7 @@ int validar_plan(plan *planes, int num_planes, char *cod_plan, char *descripcion
             }
         }
         return 0; // el plan no existe
-    } else{
+    } else {
         return -1; // plan inválido
     }
 }
@@ -56,7 +56,7 @@ int validar_sede(sede *sedes, int num_sedes, char *cod_sede, char *ubicacion_sed
             }
         }
         return 0; // la sede no existe
-    } else{
+    } else {
         return -1; // sede inválida
     }
 }

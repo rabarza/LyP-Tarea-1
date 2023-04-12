@@ -512,3 +512,16 @@ void buscar_persona(persona *personas, int num_personas){
     }
     printf("El usuario no se encuentra en la base de datos\n");
 }
+
+void datos_faltantes_personas(persona *personas, sede *sedes, plan *planes, int *num_personas, int *num_sedes, int *num_planes) {
+    for (int i = 0; i < *num_personas; i++) {
+        if (personas[i].descripcion_plan == NULL){ // si faltan datos descripcion plan
+            plan plan_buscado = encontrar_plan(planes, *num_planes, personas[i].cod_plan);
+            personas[i].descripcion_plan = strdup(plan_buscado.descripcion_plan);
+        }
+        if (personas[i].ubicacion_sede == NULL){ // si faltan datos ubicacion sede
+            sede sede_buscada = encontrar_sede(sedes, *num_sedes, personas[i].cod_sede);
+            personas[i].ubicacion_sede = strdup(sede_buscada.ubicacion_sede);
+        }
+    }
+}
