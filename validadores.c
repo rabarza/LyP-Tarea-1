@@ -6,8 +6,8 @@ int validar_rut(persona *personas, int num_personas, char* rut){
     /* 
     * Funcion que valida el RUT como llave única de una estructura de tipo persona.
     Devuelve: 
-        true: si la llave es única (no se encuentra en los datos) y, 
-        false: la llave no es única (si el usuario de ID RUT ya está registrado).
+        1: si la llave es única (no se encuentra en los datos) y, 
+        0: la llave no es única (si el usuario de ID RUT ya está registrado).
     * Parametros: 
      -*personas: puntero a la direccion de memoria del primer elemento del arreglo de estructuras de tipo `persona`.
      - rut: llave única a ser validada (puntero al arreglo de caracteres que representa la llave única).

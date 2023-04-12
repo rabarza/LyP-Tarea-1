@@ -64,7 +64,7 @@ int main() {
                 eliminar_plan(planes, &num_planes); // eliminar un plan
                 break;            
             case 10:
-                // cambiar cliente de plan
+                cambiar_plan_persona(personas, planes, num_personas, num_planes); // cambiar cliente de plan
                 break;            
             case 11:
                 imprimir_sedes(sedes, num_sedes); // agregar una sede al arreglo notar que se modifica num_sedes
@@ -76,10 +76,10 @@ int main() {
                 eliminar_sede(sedes, &num_sedes); // eliminar sede
                 break;            
             case 14:
-                // cambiar a un cliente de sede
+                cambiar_sede_persona(personas, sedes, num_personas, num_sedes); // cambiar a un cliente de sede
                 break;            
             case 15:
-                // cerrar el programa
+                // guardar cambios y cerrar el programa
                 break;            
 
             default:

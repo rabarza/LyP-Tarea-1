@@ -3,7 +3,7 @@
 
 void imprimir_sedes(sede *sedes, int num_sedes) {
     if (sedes != NULL){
-        printf("Mostrando sedes disponibles: \n\n");
+        printf("Mostrando sedes disponibles... \n\n");
         printf("Número de sedes disponibles: %d\n\n", num_sedes);
         for (int i = 0; i < num_sedes; i++) {
             printf("Sede: %d\n", i + 1);

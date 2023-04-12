@@ -111,19 +111,10 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
         validador_sedes = validar_sede(temp_s, s, cod_sede_str, ubicacion_sede_str); // validar si se debe agregar la sede o aumentar la cantidad de personas en esta
         validador_plan = validar_plan(temp_p, p, cod_plan_str, descripcion_plan_str); // validar si se debe agregar el plan o aumentar la cantidad de personas suscritas en el
 
-        if (validador_fechas == 0){ // las fechas estan al reves
-            // intercambiar fechas
-            // printf("Intercambiar fechas");
-			// printf("fecha_antes: %s, fecha_despues %s", desde_str, hasta_str);
-            intercambiar_fechas(&desde_str, &hasta_str);
-			// printf("fecha_antes: %s, fecha_despues %s", desde_str, hasta_str);
-					
-					
-        } else if (validador_fechas == 2 || validador_fechas == 3){ // falta una de las fechas
-            // Realizar correccion del formato de fechas
-			// printf("\n\nfecha_antes: %s, fecha_despues %s\n", desde_str, hasta_str);
+        if (validador_fechas == 0){ // si las fechas estan al reves
+            intercambiar_fechas(&desde_str, &hasta_str); // intercambiar fechas					
+        } else if (validador_fechas == 2 || validador_fechas == 3){ // si falta una de las fechas
             reformatear_fechas(&desde_str, &hasta_str);
-			// printf("\n\nfecha_antes: %s, fecha_despues %s\n", desde_str, hasta_str);		
         }
 
         //validar si se puede agregar la persona al arreglo
@@ -150,7 +141,6 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
                 };
 
                 temp_s[s++] = sede_temp;
-                // s += 1;
 
             } else if (validador_sedes == 1) { // sede existente agregar cliente
                 aumentar_clientes_sede(temp_s, s, cod_sede_str); // aumentar cantidad de clientes en la sede
@@ -164,7 +154,6 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
                 };
 
                 temp_p[p++] = plan_temp;
-                // p += 1;
             } else if (validador_plan == 1) { //plan existente agregar cliente
                 aumentar_clientes_plan(temp_p, p, cod_plan_str); // aumentar cantidad de clientes en el plan
             }
@@ -213,12 +202,22 @@ persona escanear_datos(sede* sedes, int num_sedes, plan *planes, int num_planes)
         switch (plan_selector){
             case 1: // plan existente
                 int idx_plan_elect;
+                
                 // Mostrar planes y leer opción ingresada
                 imprimir_planes(planes, num_planes);
-                printf("Ingresar número del plan a elegir: ");
-                fgets(linea, MAX_LEN, stdin);
-                linea[strcspn(linea, "\n")] = '\0';
-                idx_plan_elect = atoi(linea);
+
+                while ( idx_plan_elect > num_planes || idx_plan_elect <= 0 ) {
+                    printf("Ingresar número del plan a elegir: ");
+                    fgets(linea, MAX_LEN, stdin);
+                    linea[strcspn(linea, "\n")] = '\0';
+                    idx_plan_elect= atoi(linea);
+
+                    if (idx_plan_elect > num_planes || idx_plan_elect <= 0){ //sede no se encuentra en los datos
+                        printf("\nValidación CÓDIGO PLAN: Plan no registrado\nIngrese número válido\n");
+                    } else {
+                        printf("\nValidación CÓDIGO PLAN exitosa. Agregando suscripción del cliente... \n");
+                    }
+                }
 
                 nueva_persona.cod_plan = planes[idx_plan_elect - 1].cod_plan;
                 nueva_persona.descripcion_plan = planes[idx_plan_elect - 1].descripcion_plan;
@@ -257,17 +256,26 @@ persona escanear_datos(sede* sedes, int num_sedes, plan *planes, int num_planes)
     while(sede_selector != 0){
         switch (sede_selector){
             case 1: // plan existente
-                int idx_sede_elect;
+                int idx_sede_elect = 0;
                 // Mostrar planes y leer opción ingresada
                 imprimir_sedes(sedes, num_sedes);
-                printf("Ingresar número de la sede a elegir: ");
-                fgets(linea, MAX_LEN, stdin);
-                linea[strcspn(linea, "\n")] = '\0';
-                idx_sede_elect = atoi(linea);
 
+                while ( idx_sede_elect > num_sedes || idx_sede_elect <= 0 ) {
+                    printf("Ingresar número de la nueva sede a elegir: ");
+                    fgets(linea, MAX_LEN, stdin);
+                    linea[strcspn(linea, "\n")] = '\0';
+                    idx_sede_elect = atoi(linea);
+
+                    if (idx_sede_elect > num_sedes || idx_sede_elect <= 0){ //sede no se encuentra en los datos
+                        printf("\nValidación CÓDIGO SEDE: Sede no registrada\nIngrese número válido\n");
+                    } else {
+                        printf("\nValidación CÓDIGO SEDE exitosa. Agregando cliente en sede... \n");
+                    }
+                }
                 nueva_persona.cod_sede = sedes[idx_sede_elect - 1].cod_sede;
                 nueva_persona.ubicacion_sede = sedes[idx_sede_elect - 1].ubicacion_sede;
                 sede_selector = 0;
+
                 break;
             case 2: // nuevo plan
                 // leer datos
@@ -524,4 +532,131 @@ void datos_faltantes_personas(persona *personas, sede *sedes, plan *planes, int 
             personas[i].ubicacion_sede = strdup(sede_buscada.ubicacion_sede);
         }
     }
+}
+
+void cambiar_sede_persona(persona *personas, sede *sedes, int num_personas, int num_sedes){
+    char *rut;
+    char *cod_sede;
+    char *ubicacion_sede;
+
+    char linea[MAX_LEN];    
+    printf("Ingrese RUT (sin puntos y con guión): ");
+    fgets(linea, MAX_LEN, stdin);
+    linea[strcspn(linea, "\n")] = '\0'; 
+    rut = strdup(linea);    
+    
+    int validador_rut = validar_rut(personas, num_personas, rut); 
+    if (validador_rut == 1){
+      printf("\nValidacion RUT: Usuario no registrado\nImposible cambiar sede\n");
+      return;
+    }    
+    printf("\nBuscando a la persona con RUT: %s ...\n", rut);    
+    int i;
+    for (i = 0; i < num_personas; i++){
+        if (strcmp(personas[i].rut, rut) == 0){
+            persona lista[1];
+            lista[0] = personas[i];
+            printf(">>> Usuario localizado en la base de datos\n\n");
+            break;
+        }  
+    }   
+    // printf("Ingrese el codigo de la nueva sede para este usuario: ");   
+    // fgets(linea, MAX_LEN, stdin);
+    // linea[strcspn(linea, "\n")] = '\0';
+    // cod_sede = strdup(linea); 
+    int idx_sede_elect = 0;
+    // Mostrar planes y leer opción ingresada
+    imprimir_sedes(sedes, num_sedes);
+    while ( idx_sede_elect > num_sedes || idx_sede_elect <= 0 ) {
+        printf("Ingresar número de la nueva sede a elegir: ");
+        fgets(linea, MAX_LEN, stdin);
+        linea[strcspn(linea, "\n")] = '\0';
+        idx_sede_elect = atoi(linea);
+        
+        if (idx_sede_elect > num_sedes || idx_sede_elect <= 0){ //sede no se encuentra en los datos
+            printf("\nValidación CÓDIGO SEDE: Sede no registrada\nIngrese número válido\n");
+        } else {
+            printf("\nValidación CÓDIGO SEDE exitosa --> cambiando sede...\n");
+        }
+    }
+
+    disminuir_clientes_sede(sedes, num_sedes, personas[i].cod_sede);
+
+    personas[i].cod_sede = sedes[idx_sede_elect - 1].cod_sede;
+    personas[i].ubicacion_sede = sedes[idx_sede_elect - 1].cod_sede;
+    
+    aumentar_clientes_sede(sedes, num_sedes, personas[i].cod_sede);
+    
+    printf(">>> La sede del cliente fue cambiada con éxito.\n\n");
+}
+
+void cambiar_plan_persona(persona *personas, plan *planes, int num_personas, int num_planes){
+    char *rut;
+    char *cod_plan;
+    char *descripcion_plan;
+
+    char linea[MAX_LEN];    
+    printf("Ingrese RUT (sin puntos y con guión): ");
+    fgets(linea, MAX_LEN, stdin);
+    linea[strcspn(linea, "\n")] = '\0'; 
+    rut = strdup(linea);    
+    
+    int validador_rut = validar_rut(personas, num_personas, rut); 
+    if (validador_rut == 1){
+      printf("\nValidacion RUT: Usuario no registrado\nImposible cambiar plan\n");
+      return;
+    }    
+    printf("\nBuscando a la persona con RUT: %s ...\n", rut);    
+    int i;
+    for (i = 0; i < num_personas; i++){
+        if (strcmp(personas[i].rut, rut) == 0){
+            persona lista[1];
+            lista[0] = personas[i];
+            printf(">>> Usuario localizado en la base de datos\n\n");
+            break;
+        }  
+    }   
+    int idx_plan_elect = 0;
+    // Mostrar planes y leer opción ingresada
+    imprimir_planes(planes, num_planes);
+    while ( idx_plan_elect > num_planes || idx_plan_elect <= 0 ) {
+        printf("Ingresar número del nuevo plan a elegir: ");
+        fgets(linea, MAX_LEN, stdin);
+        linea[strcspn(linea, "\n")] = '\0';
+        idx_plan_elect = atoi(linea);
+        
+        if (idx_plan_elect > num_planes || idx_plan_elect <= 0){ //sede no se encuentra en los datos
+            printf("\nValidación CÓDIGO PLAN: Plan no registrado\nIngrese número válido\n");
+        } else {
+            printf("\nValidación CÓDIGO PLAN exitosa --> cambiando suscripción...\n");
+        }
+    }
+
+    disminuir_clientes_plan(planes, num_planes, personas[i].cod_plan);
+
+    personas[i].cod_plan = planes[idx_plan_elect - 1].cod_plan;
+    personas[i].descripcion_plan = planes[idx_plan_elect - 1].descripcion_plan;
+    
+    aumentar_clientes_plan(planes, num_planes, personas[i].cod_plan);
+
+    printf("Ingrese nuevas fechas de inicio y término de la suscripción\n");
+    printf("Fecha de inicio (AAAA/MM/DD): ");
+    fgets(linea, MAX_LEN, stdin);
+    linea[strcspn(linea, "\n")] = '\0';
+    personas[i].desde = strdup(linea);
+    
+    printf("Fecha de termino (AAAA/MM/DD): ");
+    fgets(linea, MAX_LEN, stdin);
+    linea[strcspn(linea, "\n")] = '\0';
+    personas[i].hasta = strdup(linea);
+    
+
+    int validador_fechas = validar_orden_fechas(personas[i].desde, personas[i].hasta);
+    if (validador_fechas == 0) { // si las fechas estan al reves
+        intercambiar_fechas(&(personas[i].desde), &(personas[i].hasta)); // intercambiar fechas
+    } else if (validador_fechas == 2 || validador_fechas == 3) { // falta una de las fechas -> AGREGAR LA FECHA FALTANTE +- 3 MESES
+        reformatear_fechas(&(personas[i].desde), &(personas[i].hasta));
+    }
+
+    printf(">>> La suscripción del cliente fue cambiada con éxito.\n\n");
 }
