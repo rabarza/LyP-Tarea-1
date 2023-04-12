@@ -15,4 +15,6 @@ void aumentar_clientes_sede(sede *sedes, int num_sedes, char *cod_sede);
 void disminuir_clientes_sede(sede *sedes, int num_sedes, char *cod_sede);
 void agregar_sede(sede *sedes, int *num_sedes);
 void eliminar_sede(sede *sedes, int *num_sedes);
+sede escanear_datos_sede();
+
 #endif

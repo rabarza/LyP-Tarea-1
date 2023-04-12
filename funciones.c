@@ -182,7 +182,7 @@ persona *leer_archivo(char *nombre_archivo, int *num_personas,int *num_planes, i
 persona escanear_datos(sede* sedes, int num_sedes, plan *planes, int num_planes){ 
     persona nueva_persona;
     char linea[MAX_LEN];
-    int plan_selector;
+    int plan_selector, sede_selector;
 
     //Lectura de datos
     printf("Ingrese los siguientes datos solicitados por consola\n\n");
@@ -202,52 +202,51 @@ persona escanear_datos(sede* sedes, int num_sedes, plan *planes, int num_planes)
     linea[strcspn(linea, "\n")] = '\0';
     nueva_persona.edad = atoi(linea);
 
-    // printf("Seleccionar plan: \n");
-    // printf("1. Seleccionar plan existente: \n");
-    // printf("2. Seleccionar plan nuevo: \n");
+    printf("Seleccionar plan: \n");
+    printf("1. Seleccionar plan existente: \n");
+    printf("2. Seleccionar plan nuevo: \n");
+    fgets(linea, MAX_LEN, stdin);
+    linea[strcspn(linea, "\n")] = '\0';
+    plan_selector = atoi(linea);
+
+    while(plan_selector != 0){
+        
+        switch (plan_selector){
+            case 1: // plan existente
+                int idx_plan_elect;
+                // Mostrar planes y leer opción ingresada
+                imprimir_planes(planes, num_planes);
+                printf("Ingresar número del plan a elegir: ");
+                fgets(linea, MAX_LEN, stdin);
+                linea[strcspn(linea, "\n")] = '\0';
+                idx_plan_elect = atoi(linea);
+
+                nueva_persona.cod_plan = planes[idx_plan_elect - 1].cod_plan;
+                nueva_persona.descripcion_plan = planes[idx_plan_elect - 1].descripcion_plan;
+                plan_selector = 0;
+                break;
+            case 2: // nuevo plan
+                // leer datos
+                plan nuevo_plan = escanear_datos_plan();
+                nueva_persona.cod_plan = nuevo_plan.cod_plan;
+                nueva_persona.descripcion_plan = nuevo_plan.descripcion_plan;
+                nuevo_plan.n_clientes_plan = 1;
+                plan_selector = 0;
+                break;
+            default:
+                break;
+        }
+    }
+
+    // printf("Código del plan ");
     // fgets(linea, MAX_LEN, stdin);
     // linea[strcspn(linea, "\n")] = '\0';
-    // plan_selector = atoi(linea);
+    // nueva_persona.cod_plan = strdup(linea);
 
-    // while(plan_selector != 0){
-        
-    //     switch (plan_selector){
-    //     case 1:
-    //         int idx_plan_elect;
-    //         // Mostrar planes y leer opción ingresada
-    //         imprimir_planes(planes, num_planes);
-    //         printf("Ingresar numero del plan a elegir: \n");
-    //         linea[strcspn(linea, "\n")] = '\0';
-    //         getchar();
-    //         idx_plan_elect = atoi(linea);
-
-    //         nueva_persona.cod_plan = planes[idx_plan_elect].cod_plan;
-    //         nueva_persona.descripcion_plan = planes[idx_plan_elect].descripcion_plan;
-    //         plan_selector = 0;
-    //         break;
-    //     case 2:
-    //         // leer datos
-    //         plan nuevo_plan = escanear_datos_plan();
-    //         nueva_persona.cod_plan = nuevo_plan.cod_plan;
-    //         nueva_persona.descripcion_plan = nuevo_plan.descripcion_plan;
-    //         nuevo_plan.n_clientes_plan = 1;
-    //         plan_selector = 0;
-    //         break;
-    //     default:
-    //         break;
-    //     }
-    // }
-    // getchar();
-
-    printf("Código del plan ");
-    fgets(linea, MAX_LEN, stdin);
-    linea[strcspn(linea, "\n")] = '\0';
-    nueva_persona.cod_plan = strdup(linea);
-
-    printf("Descripción plan");
-    fgets(linea, MAX_LEN, stdin);
-    linea[strcspn(linea, "\n")] = '\0';
-    nueva_persona.descripcion_plan = strdup(linea);
+    // printf("Descripción plan");
+    // fgets(linea, MAX_LEN, stdin);
+    // linea[strcspn(linea, "\n")] = '\0';
+    // nueva_persona.descripcion_plan = strdup(linea);
 
     printf("Fecha de inicio (AAAA/MM/DD): ");
     fgets(linea, MAX_LEN, stdin);
@@ -259,15 +258,50 @@ persona escanear_datos(sede* sedes, int num_sedes, plan *planes, int num_planes)
     linea[strcspn(linea, "\n")] = '\0';
     nueva_persona.hasta = strdup(linea);
     
-    printf("Codigo de sede: ");
+    printf("Seleccionar sede: \n");
+    printf("1. Seleccionar sede existente: \n");
+    printf("2. Seleccionar nueva sede: \n");
     fgets(linea, MAX_LEN, stdin);
     linea[strcspn(linea, "\n")] = '\0';
-    nueva_persona.cod_sede = strdup(linea);
+    sede_selector = atoi(linea);
+
+    while(sede_selector != 0){
+        switch (sede_selector){
+            case 1: // plan existente
+                int idx_sede_elect;
+                // Mostrar planes y leer opción ingresada
+                imprimir_sedes(sedes, num_sedes);
+                printf("Ingresar número de la sede a elegir: ");
+                fgets(linea, MAX_LEN, stdin);
+                linea[strcspn(linea, "\n")] = '\0';
+                idx_sede_elect = atoi(linea);
+
+                nueva_persona.cod_sede = sedes[idx_sede_elect - 1].cod_sede;
+                nueva_persona.ubicacion_sede = sedes[idx_sede_elect - 1].ubicacion_sede;
+                sede_selector = 0;
+                break;
+            case 2: // nuevo plan
+                // leer datos
+                sede nueva_sede = escanear_datos_sede();
+                nueva_persona.cod_plan = nueva_sede.cod_sede;
+                nueva_persona.descripcion_plan = nueva_sede.ubicacion_sede;
+                nueva_sede.n_clientes_sede = 1;
+                sede_selector = 0;
+                break;
+            default:
+                break;
+        }
+    }
+
+    // printf("Codigo de sede: ");
+    // fgets(linea, MAX_LEN, stdin);
+    // linea[strcspn(linea, "\n")] = '\0';
+    // nueva_persona.cod_sede = strdup(linea);
     
-    printf("Ubicacion de sede: ");
-    fgets(linea, MAX_LEN, stdin);
-    linea[strcspn(linea, "\n")] = '\0';
-    nueva_persona.ubicacion_sede = strdup(linea);
+    // printf("Ubicacion de sede: ");
+    // fgets(linea, MAX_LEN, stdin);
+    // linea[strcspn(linea, "\n")] = '\0';
+    // nueva_persona.ubicacion_sede = strdup(linea);
 
    return nueva_persona;
 }
