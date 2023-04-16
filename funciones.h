@@ -32,6 +32,7 @@ void buscar_persona(persona *personas, int num_personas);
 
 void cambiar_sede_persona(persona *personas, sede *sedes, int num_personas, int num_sedes);
 void cambiar_plan_persona(persona *personas, plan *planes, int num_personas, int num_planes);
+void editar_datos_cliente(persona *personas, sede *sedes, plan *planes, int *num_personas, int *num_planes, int *num_sedes);
 
 void bubble_sort_por_apellido(persona *personas, int num_personas);
 

@@ -50,9 +50,7 @@ int main() {
                 eliminar_persona(personas, sedes, planes, &num_personas, &num_sedes, &num_planes); // eliminar persona
                 break;
             case 6:
-                // editar datos cliente
-                // buscar_persona() // buscar una persona por rut
-                // a esa persona le modificamos los datos
+                editar_datos_cliente(personas, sedes, planes, &num_personas, &num_planes, &num_sedes);
                 break;          
             case 7:
                 imprimir_planes(planes, num_planes); // agregar un plan al arreglo
