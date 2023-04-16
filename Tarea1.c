@@ -78,6 +78,7 @@ int main() {
                 break;            
             case 15:
                 // guardar cambios y cerrar el programa
+                guardar_csv_personas(personas, num_personas);
                 break;            
 
             default:

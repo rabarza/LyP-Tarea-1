@@ -746,155 +746,6 @@ void editar_datos_cliente(persona *personas, sede *sedes, plan *planes, int *num
                 printf(">>>Edad cambiada con exito\n");
                 break;
 
-            // case 4:
-            //     printf("Seleccionar plan: \n");
-            //     printf("1. Seleccionar plan existente: \n");
-            //     printf("2. Seleccionar plan nuevo: \n");
-            //     fgets(linea, MAX_LEN, stdin);
-            //     linea[strcspn(linea, "\n")] = '\0';
-            //     plan_selector = atoi(linea);
-
-            //     while(plan_selector != 0){
-            //         switch (plan_selector){
-            //         case 1: // plan existente
-
-            //             // Mostrar planes y leer opción ingresada
-            //             imprimir_planes(planes, *num_planes);
-
-            //             while ( idx_plan_elect > *num_planes || idx_plan_elect <= 0 ) {
-            //                 printf("Ingresar número del plan a elegir: ");
-            //                 fgets(linea, MAX_LEN, stdin);
-            //                 linea[strcspn(linea, "\n")] = '\0';
-            //                 idx_plan_elect= atoi(linea);
-
-            //                 if (idx_plan_elect > *num_planes || idx_plan_elect <= 0) { // plan no se encuentra en los datos
-            //                     printf("\nValidación CÓDIGO PLAN: Plan no registrado\nIngrese número válido\n");
-            //                 } else {
-            //                     printf("\nValidación CÓDIGO PLAN exitosa.\n Cambiando la suscripción del cliente... \n");
-            //                     printf("Suscripción cambiada con éxito.\n");
-            //                 }
-            //             }
-
-            //             personas[i].cod_plan = planes[idx_plan_elect - 1].cod_plan;
-            //             personas[i].descripcion_plan = planes[idx_plan_elect - 1].descripcion_plan;
-            //             plan_selector = 0;
-            //             break;
-
-            //         case 2: // nuevo plan
-            //             // leer datos
-            //             plan nuevo_plan = escanear_datos_plan();
-            //             disminuir_clientes_plan(planes, *num_planes, personas[i].cod_plan);
-            //             personas[i].cod_plan = nuevo_plan.cod_plan;
-            //             personas[i].descripcion_plan = nuevo_plan.descripcion_plan;
-            //             nuevo_plan.n_clientes_plan = 1;
-            //             plan_selector = 0;
-            //                 // validar si se puede agregar al arreglo de estructuras
-            //             int validador_plan; 
-            //             validador_plan = validar_plan(planes, *num_planes, nuevo_plan.cod_plan, '\0');
-
-            //             if(validador_plan == 0){ // el plan no existe
-            //                 // Reasigno espacio memoria para agregar un nuevo plan
-            //                 plan *temp = realloc(planes, (*num_planes + 1) * sizeof(sede));
-            //                 if (temp == NULL){
-            //                     printf("Error de reasignacion de memoria: funcion (agregar_plan)");
-            //                     return;
-            //                 }
-            //                 temp[*num_planes] = nuevo_plan; // insertar el nuevo_plan al final del arreglo
-
-            //                 planes = temp;
-            //                 *num_planes += 1;
-            //             } else {
-            //                 printf("El plan ya existe\n");
-            //             }
-
-            //             break;
-            //         default:
-            //             break;
-            //         }
-            //     }
-            //     break;
-            // case 5:
-            //     printf("Ingrese la nueva fecha de inicio (AAAA/MM/DD): ");
-            //     fgets(linea, MAX_LEN, stdin);
-            //     linea[strcspn(linea, "\n")] = '\0';
-            //     personas[i].desde = strdup(linea);
-
-            //     printf("Fecha cambiada con exito\n");
-            //     break;
-            // case 6:
-            //     printf("Ingrese la nueva fecha de termino (AAAA/MM/DD): ");
-            //     fgets(linea, MAX_LEN, stdin);
-            //     linea[strcspn(linea, "\n")] = '\0';
-            //     personas[i].hasta = strdup(linea);
-
-            //     printf("Fecha cambiada con exito\n");
-            //     break;          
-            // case 7:
-            //     printf("Seleccionar sede: \n");
-            //     printf("1. Seleccionar sede existente: \n");
-            //     printf("2. Seleccionar nueva sede: \n");
-            //     fgets(linea, MAX_LEN, stdin);
-            //     linea[strcspn(linea, "\n")] = '\0';
-            //     sede_selector = atoi(linea);
-
-            //     while(sede_selector != 0){
-            //         switch (sede_selector){
-            //             case 1: // plan existente
-            //                 // Mostrar planes y leer opción ingresada
-            //                 imprimir_sedes(sedes, *num_sedes);
-            //                 while ( idx_sede_elect > *num_sedes || idx_sede_elect <= 0 ) {
-            //                     printf("Ingresar número de la nueva sede a elegir: ");
-            //                     fgets(linea, MAX_LEN, stdin);
-            //                     linea[strcspn(linea, "\n")] = '\0';
-            //                     idx_sede_elect = atoi(linea);
-
-            //                     if (idx_sede_elect > *num_sedes || idx_sede_elect <= 0){ //sede no se encuentra en los datos
-            //                       printf("\nValidación CÓDIGO SEDE: Sede no registrada\nIngrese número válido\n");
-            //                     } else {
-            //                         printf("\nValidación CÓDIGO SEDE exitosa. Agregando cliente en sede... \n");
-            //                     }
-            //                 }
-
-            //                 personas[i].cod_sede = sedes[idx_sede_elect - 1].cod_sede;
-            //                 personas[i].ubicacion_sede = sedes[idx_sede_elect - 1].ubicacion_sede;
-            //                 sede_selector = 0;  
-
-            //                 break;
-
-            //             case 2: // nuevo plan
-            //                 // leer datos
-            //                 sede nueva_sede = escanear_datos_sede();
-            //                 disminuir_clientes_sede(sedes, *num_sedes,personas[i].cod_sede);
-            //                 personas[i].cod_sede = nueva_sede.cod_sede;
-            //                 personas[i].ubicacion_sede = nueva_sede.ubicacion_sede;
-            //                 nueva_sede.n_clientes_sede = 1;
-            //                 sede_selector = 0;
-                            
-            //                 // validar si se puede agregar al arreglo de estructuras
-            //                 int validador_sede; 
-            //                 validador_sede = validar_sede(sedes, *num_sedes, nueva_sede.cod_sede, '\0');
-
-            //                 if(validador_sede == 0){ // la sede no existe
-            //                     // Reasigno espacio memoria para agregar una nueva sede
-            //                     sede *temp = realloc(sedes, (*num_sedes + 1) * sizeof(sede));
-            //                     if (temp == NULL){
-            //                         printf("Error de reasignacion de memoria: funcion (editar_datos_persona: agregar_sede");
-            //                         return;
-            //                     }
-            //                     temp[*num_sedes] = nueva_sede; // insertar la nueva_sede al final del arreglo
-
-            //                     sedes = temp;
-            //                     *num_sedes += 1;
-            //                 } else {
-            //                     printf("La sede ya existe\n");
-            //                 }
-                            
-            //                 break;
-
-            //             default:
-            //                 break;  
-                    // }
-                // }
             case 4: // salir del editor
                 break;
             
@@ -902,4 +753,49 @@ void editar_datos_cliente(persona *personas, sede *sedes, plan *planes, int *num
                 break;
         }
     }  
+}
+
+void guardar_csv_personas(persona *personas, int num_personas) {
+    char *nombre_archivo = "BigMuscle.csv";
+    char *nombre_archivo_bak = "BigMuscle.bak";
+
+    FILE *archivo_orig;
+    FILE *archivo_bak;
+    archivo_orig = fopen(nombre_archivo, "r"); // abrir el archivo original (modo lectura)
+    archivo_bak = fopen(nombre_archivo_bak, "w"); //// abrir el archivo de respaldo (modo escritura)
+
+    if (archivo_orig == NULL || archivo_bak == NULL) {
+        printf("No se pudo abrir el archivo.\n");
+        exit(1);
+    }
+    // copia los datos del archivo original en el archivo de respaldo .bak
+    int c;
+    while ((c = fgetc(archivo_orig)) != EOF) {
+        fputc(c, archivo_bak); // insertar la linea completa
+    }
+    fclose(archivo_orig);
+    fclose(archivo_bak);
+
+    // abrir el archivo original (modo escritura) y sobrescribir los datos
+    archivo_orig = fopen(nombre_archivo, "w");
+    if (archivo_orig == NULL) {
+        printf("No se pudo abrir el archivo.\n");
+        exit(1);
+    }
+    // comenzar a escribir los datos del arreglo de personas en el archivo original
+    fprintf(archivo_orig, "rut,nombre_completo,edad,cod_plan,descripcion_plan,desde,hasta,cod_sede,ubicacion_sede\n");
+    for (int i = 0; i < num_personas; i++) {
+        fprintf(archivo_orig, "%s,%s,%d,%s,%s,%s,%s,%s,%s\n",
+            personas[i].rut,
+            personas[i].nombre_completo,
+            personas[i].edad,
+            personas[i].cod_plan,
+            personas[i].descripcion_plan,
+            personas[i].desde,
+            personas[i].hasta,
+            personas[i].cod_sede,
+            personas[i].ubicacion_sede
+        );
+    }
+    fclose(archivo_orig);
 }

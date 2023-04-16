@@ -5,3 +5,5 @@ Enunciado
 *.exe
 *.o
 .vscode
+# Ignora archivo de respaldo
+*.bak
