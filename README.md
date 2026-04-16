@@ -46,11 +46,29 @@ Las fechas usan el formato `AAAA/MM/DD`. Ver [`docs/data-format.md`](docs/data-f
 
 ## Compilación
 
+### Opción 1 — con `make` (recomendada)
+
 Requiere **GCC** y **make**.
 
 ```bash
 make        # compila → genera ./bigmuscle
 make clean  # elimina archivos objeto y el binario
+```
+
+`make` compila cada `.c` por separado en un archivo objeto (`.o`) y luego los enlaza en el ejecutable final. Solo recompila los archivos que hayan cambiado desde la última compilación.
+
+### Opción 2 — con `gcc` directamente
+
+Si no tienes `make` instalado, puedes compilar y enlazar todos los archivos en un solo comando:
+
+```bash
+gcc -Wall -Wextra -std=c11 -o bigmuscle main.c funciones.c planes.c sedes.c tiempo.c validadores.c -lm
+```
+
+Para limpiar manualmente, elimina el binario generado:
+
+```bash
+rm bigmuscle
 ```
 
 ---
