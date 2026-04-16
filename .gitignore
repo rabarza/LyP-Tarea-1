@@ -1,9 +1,10 @@
-# Ignora carpeta con enunciado
-Enunciado
-
-# Ignora archivos ejecutables
+# Build outputs
 *.exe
 *.o
+bigmuscle
+
+# Editor settings
 .vscode
-# Ignora archivo de respaldo
+
+# Backup files
 *.bak
