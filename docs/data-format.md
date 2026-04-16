@@ -1,28 +1,28 @@
-# Data Format
+# Formato de datos
 
-## CSV file — `BigMuscle.csv`
+## Archivo CSV — `BigMuscle.csv`
 
-All client data is stored in a comma-separated values (CSV) file. The first row is a header:
+Todos los datos de clientes se almacenan en un archivo de valores separados por comas (CSV). La primera fila es el encabezado:
 
 ```
 rut,nombre_completo,edad,cod_plan,descripcion_plan,desde,hasta,cod_sede,ubicacion_sede
 ```
 
-### Column reference
+### Referencia de columnas
 
-| Column | Type | Description | Example |
-|--------|------|-------------|---------|
-| `rut` | string | Chilean national ID (RUT). Used as the unique primary key. | `12344613-5` |
-| `nombre_completo` | string | Full name of the client (first name, space, last name). | `Roy Abbott` |
-| `edad` | integer | Age in years. | `27` |
-| `cod_plan` | string | Short code identifying the subscription plan. | `P1` |
-| `descripcion_plan` | string | Human-readable description of the plan. | `PROGRAMA PERFECTO PARA PRINCIPIANTES 2 VECES A LA SEMANA` |
-| `desde` | string | Subscription start date in `YYYY/MM/DD` format. | `2025/01/31` |
-| `hasta` | string | Subscription end date in `YYYY/MM/DD` format. | `2025/04/31` |
-| `cod_sede` | string | Short code identifying the branch location. | `REI` |
-| `ubicacion_sede` | string | Name of the neighbourhood/commune of the branch. | `La Reina` |
+| Columna | Tipo | Descripción | Ejemplo |
+|---------|------|-------------|---------|
+| `rut` | string | RUT chileno. Se usa como llave primaria única. | `12344613-5` |
+| `nombre_completo` | string | Nombre completo del cliente (nombre, espacio, apellido). | `Roy Abbott` |
+| `edad` | entero | Edad en años. | `27` |
+| `cod_plan` | string | Código corto que identifica el plan de suscripción. | `P1` |
+| `descripcion_plan` | string | Descripción legible del plan. | `PROGRAMA PERFECTO PARA PRINCIPIANTES 2 VECES A LA SEMANA` |
+| `desde` | string | Fecha de inicio de la suscripción en formato `AAAA/MM/DD`. | `2025/01/31` |
+| `hasta` | string | Fecha de término de la suscripción en formato `AAAA/MM/DD`. | `2025/04/31` |
+| `cod_sede` | string | Código corto que identifica la sede. | `REI` |
+| `ubicacion_sede` | string | Nombre del barrio o comuna de la sede. | `La Reina` |
 
-### Example rows
+### Filas de ejemplo
 
 ```
 rut,nombre_completo,edad,cod_plan,descripcion_plan,desde,hasta,cod_sede,ubicacion_sede
@@ -33,30 +33,30 @@ rut,nombre_completo,edad,cod_plan,descripcion_plan,desde,hasta,cod_sede,ubicacio
 
 ---
 
-## Date format
+## Formato de fechas
 
-Dates are stored and displayed as `YYYY/MM/DD` (e.g. `2025/01/31`).  
-The separator may also appear as `-` in legacy data; the application normalises both to `/` on load.
+Las fechas se almacenan y muestran como `AAAA/MM/DD` (p. ej. `2025/01/31`).  
+El separador también puede aparecer como `-` en datos heredados; la aplicación normaliza ambos a `/` al cargar.
 
-### Missing dates
+### Fechas faltantes
 
-If one of the two date fields (`desde` / `hasta`) is absent for a record, the application computes the missing value automatically:
+Si uno de los dos campos de fecha (`desde` / `hasta`) está ausente en un registro, la aplicación calcula el valor faltante automáticamente:
 
-- **`desde` missing** → `desde = hasta − 3 months`
-- **`hasta` missing** → `hasta = desde + 3 months`
+- **`desde` ausente** → `desde = hasta − 3 meses`
+- **`hasta` ausente** → `hasta = desde + 3 meses`
 
-### Out-of-order dates
+### Fechas invertidas
 
-If `desde` is chronologically later than `hasta`, the two values are swapped automatically.
-
----
-
-## Plan codes
-
-Plans are identified by a short alphanumeric code (e.g. `P1`, `MED2`, `PRO1`, `THOR101`). Each code must be unique across the dataset. Plans track the number of subscribed clients; a plan cannot be deleted while it still has subscribers.
+Si `desde` es cronológicamente posterior a `hasta`, los dos valores se intercambian automáticamente.
 
 ---
 
-## Branch codes (sedes)
+## Códigos de plan
 
-Branches are identified by a short uppercase code (e.g. `REI`, `BAR`, `PIN`, `FLO`). Each code must be unique. Like plans, a branch cannot be deleted while it has assigned clients.
+Los planes se identifican mediante un código alfanumérico corto (p. ej. `P1`, `MED2`, `PRO1`, `THOR101`). Cada código debe ser único en el conjunto de datos. Los planes llevan el conteo de clientes suscritos; un plan no puede eliminarse mientras tenga suscriptores.
+
+---
+
+## Códigos de sede
+
+Las sedes se identifican mediante un código corto en mayúsculas (p. ej. `REI`, `BAR`, `PIN`, `FLO`). Cada código debe ser único. Al igual que los planes, una sede no puede eliminarse mientras tenga clientes asignados.

@@ -1,24 +1,24 @@
-# Architecture
+# Arquitectura
 
-## Overview
+## Visión general
 
-The project is organised into self-contained modules. Each module owns a specific data type and exposes functions for creating, querying, and mutating instances of that type. `main.c` ties all modules together through a menu-driven loop.
+El proyecto está organizado en módulos independientes. Cada módulo es responsable de un tipo de dato específico y expone funciones para crear, consultar y modificar instancias de ese tipo. `main.c` conecta todos los módulos a través de un bucle de menú interactivo.
 
 ---
 
-## Module descriptions
+## Descripción de los módulos
 
 ### `main.c`
 
-Entry point. Calls `leer_archivo()` to load all data from `BigMuscle.csv` into three dynamic arrays (`persona[]`, `sede[]`, `plan[]`), then runs a `while` loop that presents a 15-option menu and dispatches to the appropriate function. On exit (option 15), calls `guardar_csv_personas()` to persist changes.
+Punto de entrada. Llama a `leer_archivo()` para cargar todos los datos de `BigMuscle.csv` en tres arreglos dinámicos (`persona[]`, `sede[]`, `plan[]`), y luego ejecuta un bucle `while` que presenta el menú de 15 opciones y despacha cada acción a la función correspondiente. Al salir (opción 15) llama a `guardar_csv_personas()` para persistir los cambios.
 
 ---
 
 ### `funciones.c / funciones.h`
 
-Defines the `persona` struct and all client-level operations.
+Define la estructura `persona` y todas las operaciones sobre clientes.
 
-**Struct:**
+**Estructura:**
 
 ```c
 typedef struct {
@@ -34,30 +34,30 @@ typedef struct {
 } persona;
 ```
 
-**Key functions:**
+**Funciones principales:**
 
-| Function | Description |
-|----------|-------------|
-| `leer_archivo()` | Parses `BigMuscle.csv` and builds the three dynamic arrays. |
-| `guardar_csv_personas()` | Serialises all clients back to CSV. |
-| `datos_faltantes_personas()` | Fills in missing `descripcion_plan` and `ubicacion_sede` fields by cross-referencing plans and branches. |
-| `agregar_persona()` | Interactively adds a client; also registers new plans/branches if needed. |
-| `eliminar_persona()` | Removes a client by RUT and shifts the array. |
-| `buscar_persona()` | Searches for a client by RUT and prints their record. |
-| `imprimir_personas()` | Prints all clients. |
-| `bubble_sort_por_apellido()` | Sorts clients in-place by last name using bubble sort. |
-| `cambiar_sede_persona()` | Reassigns a client to a different branch. |
-| `cambiar_plan_persona()` | Reassigns a client to a different plan. |
-| `editar_datos_cliente()` | Allows editing RUT, name, or subscription dates. |
-| `escanear_datos()` | Interactive prompt to read a full `persona` from stdin. |
+| Función | Descripción |
+|---------|-------------|
+| `leer_archivo()` | Parsea `BigMuscle.csv` y construye los tres arreglos dinámicos. |
+| `guardar_csv_personas()` | Serializa todos los clientes de vuelta al CSV. |
+| `datos_faltantes_personas()` | Completa los campos `descripcion_plan` y `ubicacion_sede` faltantes cruzando datos con planes y sedes. |
+| `agregar_persona()` | Agrega interactivamente un cliente; registra nuevos planes/sedes si es necesario. |
+| `eliminar_persona()` | Elimina un cliente por RUT y compacta el arreglo. |
+| `buscar_persona()` | Busca un cliente por RUT e imprime su registro. |
+| `imprimir_personas()` | Imprime todos los clientes. |
+| `bubble_sort_por_apellido()` | Ordena los clientes en su lugar por apellido usando bubble sort. |
+| `cambiar_sede_persona()` | Reasigna un cliente a otra sede. |
+| `cambiar_plan_persona()` | Reasigna un cliente a otro plan. |
+| `editar_datos_cliente()` | Permite editar RUT, nombre o fechas de suscripción. |
+| `escanear_datos()` | Solicita interactivamente los datos y retorna una estructura `persona` completa. |
 
 ---
 
 ### `planes.c / planes.h`
 
-Defines the `plan` struct and operations on subscription plans.
+Define la estructura `plan` y las operaciones sobre planes de suscripción.
 
-**Struct:**
+**Estructura:**
 
 ```c
 typedef struct {
@@ -67,24 +67,24 @@ typedef struct {
 } plan;
 ```
 
-**Key functions:**
+**Funciones principales:**
 
-| Function | Description |
-|----------|-------------|
-| `agregar_plan()` | Reads a new plan from stdin and appends it if the code is unique. |
-| `eliminar_plan()` | Removes a plan only when it has zero subscribers. |
-| `imprimir_planes()` | Lists all plans with subscriber counts. |
-| `encontrar_plan()` | Returns the `plan` matching a given code. |
-| `aumentar_clientes_plan()` | Increments the subscriber counter for a plan. |
-| `disminuir_clientes_plan()` | Decrements the subscriber counter for a plan. |
+| Función | Descripción |
+|---------|-------------|
+| `agregar_plan()` | Lee un nuevo plan desde stdin y lo agrega si el código es único. |
+| `eliminar_plan()` | Elimina un plan solo si no tiene suscriptores. |
+| `imprimir_planes()` | Lista todos los planes con el conteo de suscriptores. |
+| `encontrar_plan()` | Retorna el `plan` que coincide con un código dado. |
+| `aumentar_clientes_plan()` | Incrementa el contador de suscriptores de un plan. |
+| `disminuir_clientes_plan()` | Decrementa el contador de suscriptores de un plan. |
 
 ---
 
 ### `sedes.c / sedes.h`
 
-Defines the `sede` struct (branch location) and its operations.
+Define la estructura `sede` y sus operaciones.
 
-**Struct:**
+**Estructura:**
 
 ```c
 typedef struct {
@@ -94,24 +94,24 @@ typedef struct {
 } sede;
 ```
 
-**Key functions:**
+**Funciones principales:**
 
-| Function | Description |
-|----------|-------------|
-| `agregar_sede()` | Reads a new branch from stdin and appends it if the code is unique. |
-| `eliminar_sede()` | Removes a branch only when it has zero clients. |
-| `imprimir_sedes()` | Lists all branches with client counts. |
-| `encontrar_sede()` | Returns the `sede` matching a given code. |
-| `aumentar_clientes_sede()` | Increments the client counter for a branch. |
-| `disminuir_clientes_sede()` | Decrements the client counter for a branch. |
+| Función | Descripción |
+|---------|-------------|
+| `agregar_sede()` | Lee una nueva sede desde stdin y la agrega si el código es único. |
+| `eliminar_sede()` | Elimina una sede solo si no tiene clientes asignados. |
+| `imprimir_sedes()` | Lista todas las sedes con el conteo de clientes. |
+| `encontrar_sede()` | Retorna la `sede` que coincide con un código dado. |
+| `aumentar_clientes_sede()` | Incrementa el contador de clientes de una sede. |
+| `disminuir_clientes_sede()` | Decrementa el contador de clientes de una sede. |
 
 ---
 
 ### `tiempo.c / tiempo.h`
 
-Date parsing and arithmetic utilities.
+Utilidades de parseo y aritmética de fechas.
 
-**Struct:**
+**Estructura:**
 
 ```c
 typedef struct {
@@ -121,33 +121,33 @@ typedef struct {
 } time;
 ```
 
-**Functions:**
+**Funciones:**
 
-| Function | Description |
-|----------|-------------|
-| `string_to_timestruct()` | Parses a `"YYYY/MM/DD"` string into a `time` struct. |
-| `timestruct_to_string()` | Serialises a `time` struct back to `"YYYY/MM/DD"`. |
-| `update_time()` | Normalises a `time` struct after arithmetic (handles month overflow/underflow). |
+| Función | Descripción |
+|---------|-------------|
+| `string_to_timestruct()` | Parsea un string `"AAAA/MM/DD"` en una estructura `time`. |
+| `timestruct_to_string()` | Serializa una estructura `time` de vuelta a `"AAAA/MM/DD"`. |
+| `update_time()` | Normaliza una estructura `time` tras operaciones aritméticas (maneja desbordamiento de meses). |
 
 ---
 
 ### `validadores.c / validadores.h`
 
-Input validation and date correction functions.
+Funciones de validación de entradas y corrección de fechas.
 
-**Functions:**
+**Funciones:**
 
-| Function | Description |
-|----------|-------------|
-| `validar_rut()` | Returns `1` if a RUT is not yet registered, `0` if duplicate, `-1` if empty. |
-| `validar_plan()` | Returns `1` if a plan code exists (and fills missing description), `0` if not found. |
-| `validar_sede()` | Returns `1` if a branch code exists (and fills missing location), `0` if not found. |
-| `validar_orden_fechas()` | Checks chronological ordering of two date strings; returns codes for out-of-order, missing, or invalid dates. |
-| `intercambiar_fechas()` | Swaps two date string pointers. |
-| `reformatear_fechas()` | Given one present and one absent date, synthesises the missing date as ±3 months. |
+| Función | Descripción |
+|---------|-------------|
+| `validar_rut()` | Retorna `1` si el RUT no está registrado, `0` si está duplicado, `-1` si está vacío. |
+| `validar_plan()` | Retorna `1` si el código de plan existe (y completa la descripción si falta), `0` si no se encuentra. |
+| `validar_sede()` | Retorna `1` si el código de sede existe (y completa la ubicación si falta), `0` si no se encuentra. |
+| `validar_orden_fechas()` | Verifica el orden cronológico de dos fechas; retorna códigos para fechas invertidas, faltantes o con formato inválido. |
+| `intercambiar_fechas()` | Intercambia dos punteros de fecha. |
+| `reformatear_fechas()` | Dada una fecha presente y otra ausente, sintetiza la faltante sumando o restando 3 meses. |
 
 ---
 
-## Memory management
+## Gestión de memoria
 
-All string fields inside structs are heap-allocated with `strdup()`. Dynamic arrays are grown with `realloc()` as items are added and shrunk after items are removed. There is no explicit `free()` pass on exit (the OS reclaims memory), which is acceptable for a short-lived CLI tool.
+Todos los campos de texto dentro de las estructuras se alocan en el heap con `strdup()`. Los arreglos dinámicos crecen con `realloc()` al agregar elementos y se reducen al eliminarlos. No hay una pasada explícita de `free()` al salir; el sistema operativo libera la memoria, lo cual es aceptable para una herramienta CLI de corta duración.
